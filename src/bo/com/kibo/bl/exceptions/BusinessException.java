@@ -29,4 +29,9 @@ public class BusinessException extends RuntimeException{
     public List<BusinessExceptionMessage> getMessages() {
         return messages;
     }
+
+    public BusinessException(BusinessExceptionMessage message){
+       super(message.getMessage());
+       messages.add(message);
+    }
 }

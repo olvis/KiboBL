@@ -20,4 +20,6 @@ public interface IGenericBO<T, ID extends Serializable>{
     List<T> obtenerTodos();
     void insertar(T entity);
     void actualizar(T entity);
+    void setIdUsuario(Integer idUsuario);
+    Integer getIdUsuario();
 }
