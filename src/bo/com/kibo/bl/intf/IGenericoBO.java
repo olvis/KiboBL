@@ -15,7 +15,7 @@ import java.util.List;
  * @param <T>
  * @param <ID>
  */
-public interface IGenericBO<T, ID extends Serializable>{
+public interface IGenericoBO<T, ID extends Serializable>{
     T obtenerPorId(ID id);
     List<T> obtenerTodos();
     void insertar(T entity);

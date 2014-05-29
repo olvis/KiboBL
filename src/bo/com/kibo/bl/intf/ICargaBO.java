@@ -12,6 +12,6 @@ import bo.com.kibo.entidades.Carga;
  *
  * @author Olvinho
  */
-public interface ICargaBO extends IGenericBO<Carga, Integer>{
+public interface ICargaBO extends IGenericoBO<Carga, Integer>{
     
 }

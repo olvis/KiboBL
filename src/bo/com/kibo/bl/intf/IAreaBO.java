@@ -12,6 +12,6 @@ import bo.com.kibo.entidades.Area;
  *
  * @author Olvinho
  */
-public interface IAreaBO extends IGenericBO<Area, Integer>{
+public interface IAreaBO extends IGenericoBO<Area, Integer>{
     
 }

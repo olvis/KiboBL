@@ -14,10 +14,10 @@ import bo.com.kibo.entidades.Area;
  *
  * @author Olvinho
  */
-public class AreaBO extends GenericBO<Area, Integer, IAreaDAO> implements IAreaBO {
+public class AreaBO extends ObjetoNegocioGenerico<Area, Integer, IAreaDAO> implements IAreaBO {
 
     public AreaBO() {
-        super.objectDAO = getDaoManager().getAreaDAO();
+        
     }
 
     @Override
@@ -46,19 +46,19 @@ public class AreaBO extends GenericBO<Area, Integer, IAreaDAO> implements IAreaB
         if (codigoValido){
             if (entity.getId() == null) {
                 //Insertando y verificamos si el código existe
-                if (objectDAO.getIdPorCodigo(entity.getCodigo()) != null) {
+                if (getObjetoDAO().getIdPorCodigo(entity.getCodigo()) != null) {
                     appendException(new BusinessExceptionMessage("El código '" + entity.getCodigo() + "' ya existe", "codigo"));
                 }
             } else {
                 //Se quiere actualizar, verificamos que es válido y que el código si cambio, no existe
-                if (!objectDAO.checkId(entity.getId())){
+                if (!getObjetoDAO().checkId(entity.getId())){
                     appendException(new BusinessExceptionMessage("El área con Id  '" + entity.getId() + "' no existe", "id"));
                 }
                 else{
-                    Area actual = objectDAO.obtenerPorId(entity.getId());
+                    Area actual = getObjetoDAO().obtenerPorId(entity.getId());
                     if (!actual.getCodigo().equals(entity.getCodigo())){
                         //El codigo cambio verificamos si existe
-                        if (objectDAO.getIdPorCodigo(entity.getCodigo()) != null) {
+                        if (getObjetoDAO().getIdPorCodigo(entity.getCodigo()) != null) {
                             appendException(new BusinessExceptionMessage("El código '" + entity.getCodigo() + "' ya existe", "codigo"));
                         }
                     }
@@ -89,6 +89,11 @@ public class AreaBO extends GenericBO<Area, Integer, IAreaDAO> implements IAreaB
                 appendException(new BusinessExceptionMessage("La banda debe ser un carácter entre C y N", "bandaUTM"));
             }
         }
+    }
+
+    @Override
+    IAreaDAO getObjetoDAO() {
+        return getDaoManager().getAreaDAO();
     }
 
 }

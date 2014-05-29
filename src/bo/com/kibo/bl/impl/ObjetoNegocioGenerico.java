@@ -8,9 +8,9 @@ package bo.com.kibo.bl.impl;
 import bo.com.kibo.bl.exceptions.BusinessException;
 import bo.com.kibo.bl.exceptions.BusinessExceptionMessage;
 import bo.com.kibo.bl.exceptions.PermisosInsuficientesException;
-import bo.com.kibo.bl.intf.IGenericBO;
-import bo.com.kibo.dal.impl.control.DAOManagerFactory;
-import bo.com.kibo.dal.intf.IGenericDAO;
+import bo.com.kibo.bl.intf.IGenericoBO;
+import bo.com.kibo.dal.impl.control.FactoriaDAOManager;
+import bo.com.kibo.dal.intf.IDAOGenerico;
 import bo.com.kibo.dal.intf.control.IDAOManager;
 import bo.com.kibo.entidades.RolPermiso;
 import bo.com.kibo.entidades.RolPermisoId;
@@ -28,21 +28,20 @@ import java.util.logging.Logger;
  * @param <ID> Clase que que representa el Id
  * @param <U> Clase DAO
  */
-public abstract class GenericBO<T, ID extends Serializable, U extends IGenericDAO<T, ID>> implements IGenericBO<T, ID> {
+public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extends IDAOGenerico<T, ID>> implements IGenericoBO<T, ID> {
 
-    protected U objectDAO;
     private IDAOManager daoManager;
     protected Integer idUsuario;
     protected Usuario usuarioActual;
     private BusinessException mensajesError;
     
-    public GenericBO() {
+    public ObjetoNegocioGenerico() {
         
     }
 
     public IDAOManager getDaoManager() {
         if (daoManager == null) {
-            this.daoManager = DAOManagerFactory.getDAOManager();
+            this.daoManager = FactoriaDAOManager.getDAOManager();
         }
         return daoManager;
     }
@@ -58,7 +57,7 @@ public abstract class GenericBO<T, ID extends Serializable, U extends IGenericDA
         }catch(BusinessException ex){
             throw ex;
         } catch (Exception ex) {
-            Logger.getLogger(GenericBO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ObjetoNegocioGenerico.class.getName()).log(Level.SEVERE, null, ex);
             throw new BusinessException("Error de ejecución dentro de la transacción");
         }
         finally{
@@ -88,7 +87,7 @@ public abstract class GenericBO<T, ID extends Serializable, U extends IGenericDA
 
     @Override
     public T obtenerPorId(ID id) {
-        return objectDAO.obtenerPorId(id);
+        return getObjetoDAO().obtenerPorId(id);
     }
 
     @Override
@@ -96,7 +95,7 @@ public abstract class GenericBO<T, ID extends Serializable, U extends IGenericDA
         return ejecutarEnTransaccion(new Callable<List<T>>() {
             @Override
             public List<T> call() {
-                return objectDAO.obtenerTodos();
+                return getObjetoDAO().obtenerTodos();
             }
         });
     }
@@ -122,7 +121,7 @@ public abstract class GenericBO<T, ID extends Serializable, U extends IGenericDA
                 if (mensajesError != null){
                     throw mensajesError;
                 }
-                objectDAO.persistir(x);
+                getObjetoDAO().persistir(x);
                 return null;
             }
         });
@@ -153,7 +152,7 @@ public abstract class GenericBO<T, ID extends Serializable, U extends IGenericDA
                 if (mensajesError != null){
                     throw mensajesError;
                 }
-                objectDAO.persistir(x);
+                getObjetoDAO().persistir(x);
                 return null;
             }
         });
@@ -199,4 +198,5 @@ public abstract class GenericBO<T, ID extends Serializable, U extends IGenericDA
         return 0;
     }
 
+    abstract U getObjetoDAO();
 }

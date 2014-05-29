@@ -12,19 +12,19 @@ import bo.com.kibo.bl.intf.IAreaBO;
  *
  * @author Olvinho
  */
-public class BusinessObjectsFactory {
+public class FactoriaObjetosNegocio {
 
-    private static final ThreadLocal<BusinessObjectsFactory> box = new ThreadLocal<>();
+    private static final ThreadLocal<FactoriaObjetosNegocio> caja = new ThreadLocal<>();
 
-    private BusinessObjectsFactory() {
+    private FactoriaObjetosNegocio() {
 
     }
 
-    public static BusinessObjectsFactory getInstance() {
-        BusinessObjectsFactory businessObjectsFactory = box.get();
+    public static FactoriaObjetosNegocio getInstance() {
+        FactoriaObjetosNegocio businessObjectsFactory = caja.get();
         if (businessObjectsFactory == null) {
-            businessObjectsFactory = new BusinessObjectsFactory();
-            box.set(businessObjectsFactory);
+            businessObjectsFactory = new FactoriaObjetosNegocio();
+            caja.set(businessObjectsFactory);
         }
         return businessObjectsFactory;
     }

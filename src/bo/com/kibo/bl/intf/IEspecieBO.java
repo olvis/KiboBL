@@ -12,6 +12,6 @@ import bo.com.kibo.entidades.Especie;
  *
  * @author Olvinho
  */
-public interface IEspecieBO extends IGenericBO<Especie, Integer>{
+public interface IEspecieBO extends IGenericoBO<Especie, Integer>{
     
 }
