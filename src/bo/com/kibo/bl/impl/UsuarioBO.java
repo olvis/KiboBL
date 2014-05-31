@@ -32,4 +32,14 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
             }
         });
     }
+
+    @Override
+    public Usuario logear(final String usuario, final String pass) {        
+        return ejecutarEnTransaccion(new Callable<Usuario>() {
+            @Override
+            public Usuario call() throws Exception {
+                return getObjetoDAO().logear(usuario, pass);
+            }
+        });
+    }
 }
