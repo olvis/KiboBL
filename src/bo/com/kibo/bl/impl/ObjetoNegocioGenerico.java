@@ -62,7 +62,11 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
         }
         finally{
             if (!comiteado){
-                getDaoManager().cancelarTransaccion();
+                try {
+                    getDaoManager().cancelarTransaccion();
+                } catch (Exception e) {
+                    
+                }
             }
         }
     }

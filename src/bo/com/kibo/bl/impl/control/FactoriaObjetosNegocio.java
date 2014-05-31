@@ -6,7 +6,9 @@
 package bo.com.kibo.bl.impl.control;
 
 import bo.com.kibo.bl.impl.AreaBO;
+import bo.com.kibo.bl.impl.UsuarioBO;
 import bo.com.kibo.bl.intf.IAreaBO;
+import bo.com.kibo.bl.intf.IUsuarioBO;
 
 /**
  *
@@ -30,12 +32,19 @@ public class FactoriaObjetosNegocio {
     }
 
     private IAreaBO areaBO;
-
     public IAreaBO getAreaBO() {
         if (areaBO == null) {
             areaBO = new AreaBO();
         }
         return areaBO;
+    }
+    
+    private IUsuarioBO usuarioBO;
+    public IUsuarioBO getIUsuarioBO(){
+        if (usuarioBO == null){
+            usuarioBO = new UsuarioBO();
+        }
+        return usuarioBO;
     }
 
 }
