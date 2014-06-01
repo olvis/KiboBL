@@ -39,7 +39,7 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
             @Override
             public Usuario call() throws Exception {
                 Usuario user = getObjetoDAO().logear(usuario, pass);
-                user.setRol(getDaoManager().getRolDAO().obtenerPorId(user.getRol().getId()));
+                user.setRol(getDaoManager().getRolDAO().recuperarPorId(user.getRol().getId()));
                 return user;
             }
         });
