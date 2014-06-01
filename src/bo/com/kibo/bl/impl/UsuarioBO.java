@@ -38,7 +38,9 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
         return ejecutarEnTransaccion(new Callable<Usuario>() {
             @Override
             public Usuario call() throws Exception {
-                return getObjetoDAO().logear(usuario, pass);
+                Usuario user = getObjetoDAO().logear(usuario, pass);
+                getDaoManager().getRolDAO().obtenerPorId(user.getRol().getId());
+                return user;
             }
         });
     }
