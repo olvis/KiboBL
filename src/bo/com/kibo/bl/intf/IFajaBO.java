@@ -6,14 +6,12 @@
 
 package bo.com.kibo.bl.intf;
 
-import bo.com.kibo.entidades.Area;
+import bo.com.kibo.entidades.Faja;
 
 /**
  *
  * @author Olvinho
  */
-public interface IAreaBO extends IGeoLugarBO<Area>{
-    
-    String getCodigo(Integer id);
-    
+public interface IFajaBO extends IGeoLugarBO<Faja>{
+   
 }

@@ -34,9 +34,9 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
     protected Integer idUsuario;
     protected Usuario usuarioActual;
     private BusinessException mensajesError;
-    
+
     public ObjetoNegocioGenerico() {
-        
+
     }
 
     public IDAOManager getDaoManager() {
@@ -54,25 +54,24 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
             getDaoManager().confirmarTransaccion();
             comiteado = true;
             return result;
-        }catch(BusinessException ex){
+        } catch (BusinessException ex) {
             throw ex;
         } catch (Exception ex) {
             Logger.getLogger(ObjetoNegocioGenerico.class.getName()).log(Level.SEVERE, null, ex);
             throw new BusinessException("Error de ejecución dentro de la transacción");
-        }
-        finally{
-            if (!comiteado){
+        } finally {
+            if (!comiteado) {
                 try {
                     getDaoManager().cancelarTransaccion();
                 } catch (Exception e) {
-                    
+
                 }
             }
         }
     }
-    
-    protected void appendException(BusinessExceptionMessage message){
-        if (mensajesError == null){
+
+    protected void appendException(BusinessExceptionMessage message) {
+        if (mensajesError == null) {
             mensajesError = new BusinessException(message);
             return;
         }
@@ -90,8 +89,17 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
     }
 
     @Override
-    public T obtenerPorId(ID id) {
-        return getObjetoDAO().obtenerPorId(id);
+    public T recuperarPorId(final ID id) {
+        return ejecutarEnTransaccion(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                T entidad = getObjetoDAO().recuperarPorId(id);
+                if (entidad != null){
+                    despuesDeRecuperar(entidad);
+                }
+                return entidad;
+            }
+        });
     }
 
     @Override
@@ -117,12 +125,12 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
                 if (usuarioActual == null) {
                     throw new BusinessException("El usuario especificado no existe");
                 }
-                if (!tienePermisoInsertar()){
+                if (!tienePermisoInsertar()) {
                     throw new PermisosInsuficientesException("No tiene los privilegios necesarios para continuar, contacte al administrador");
                 }
                 mensajesError = null;
                 validar(x);
-                if (mensajesError != null){
+                if (mensajesError != null) {
                     throw mensajesError;
                 }
                 getObjetoDAO().persistir(x);
@@ -148,12 +156,12 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
                 if (usuarioActual == null) {
                     throw new BusinessException("El usuario especificado no existe");
                 }
-                if (!tienePermisoModificar()){
+                if (!tienePermisoModificar()) {
                     throw new PermisosInsuficientesException("No tiene los privilegios necesarios para continuar, contacte al administrador");
                 }
                 mensajesError = null;
                 validar(x);
-                if (mensajesError != null){
+                if (mensajesError != null) {
                     throw mensajesError;
                 }
                 getObjetoDAO().persistir(x);
@@ -203,4 +211,15 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
     }
 
     abstract U getObjetoDAO();
+    
+    protected void despuesDeRecuperar(T entidad){
+        
+    }
+    
+    protected boolean isNullOrEmpty(String valor){
+        if ((valor == null) || ("".equals(valor)))
+            return true;
+                
+        return false;
+    }
 }

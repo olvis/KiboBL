@@ -6,14 +6,13 @@
 
 package bo.com.kibo.bl.intf;
 
-import bo.com.kibo.entidades.Area;
+import bo.com.kibo.entidades.GeoLugar;
 
 /**
  *
  * @author Olvinho
+ * @param <T>Clase entidad GeoLugar
  */
-public interface IAreaBO extends IGeoLugarBO<Area>{
-    
-    String getCodigo(Integer id);
+public interface IGeoLugarBO<T extends GeoLugar> extends IGenericoBO<T, Integer>{
     
 }
