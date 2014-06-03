@@ -113,14 +113,14 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
     }
 
     @Override
-    public void insertar(T entity) {
+    public T insertar(T entity) {
         if (idUsuario == null) {
             throw new BusinessException("Debe definir el usuario que solicitando la acción para continuar");
         }
         final T x = entity;
-        ejecutarEnTransaccion(new Callable<Void>() {
+        return ejecutarEnTransaccion(new Callable<T>() {
             @Override
-            public Void call() {
+            public T call() {
                 usuarioActual = getDaoManager().getUsuarioDAO().recuperarPorId(idUsuario);
                 if (usuarioActual == null) {
                     throw new BusinessException("El usuario especificado no existe");
@@ -133,8 +133,7 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
                 if (mensajesError != null) {
                     throw mensajesError;
                 }
-                getObjetoDAO().persistir(x);
-                return null;
+                return getObjetoDAO().persistir(x);
             }
         });
     }
@@ -144,14 +143,14 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
     }
 
     @Override
-    public void actualizar(T entity) {
+    public T actualizar(T entity) {
         if (idUsuario == null) {
             throw new BusinessException("Debe definir el usuario que solicitando la acción para continuar");
         }
         final T x = entity;
-        ejecutarEnTransaccion(new Callable<Void>() {
+        return ejecutarEnTransaccion(new Callable<T>() {
             @Override
-            public Void call() {
+            public T call() {
                 usuarioActual = getDaoManager().getUsuarioDAO().recuperarPorId(idUsuario);
                 if (usuarioActual == null) {
                     throw new BusinessException("El usuario especificado no existe");
@@ -164,8 +163,7 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
                 if (mensajesError != null) {
                     throw mensajesError;
                 }
-                getObjetoDAO().persistir(x);
-                return null;
+                return getObjetoDAO().persistir(x);
             }
         });
     }

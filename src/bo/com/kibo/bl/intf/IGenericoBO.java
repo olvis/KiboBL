@@ -18,8 +18,8 @@ import java.util.List;
 public interface IGenericoBO<T, ID extends Serializable>{
     T recuperarPorId(ID id);
     List<T> obtenerTodos();
-    void insertar(T entity);
-    void actualizar(T entity);
+    T insertar(T entity);
+    T actualizar(T entity);
     void setIdUsuario(Integer idUsuario);
     Integer getIdUsuario();
 }
