@@ -6,10 +6,18 @@
 package bo.com.kibo.bl.impl.control;
 
 import bo.com.kibo.bl.impl.AreaBO;
+import bo.com.kibo.bl.impl.CalidadBO;
+import bo.com.kibo.bl.impl.CargaBO;
+import bo.com.kibo.bl.impl.EspecieBO;
 import bo.com.kibo.bl.impl.FajaBO;
+import bo.com.kibo.bl.impl.FormularioCensoBO;
 import bo.com.kibo.bl.impl.UsuarioBO;
 import bo.com.kibo.bl.intf.IAreaBO;
+import bo.com.kibo.bl.intf.ICalidadBO;
+import bo.com.kibo.bl.intf.ICargaBO;
+import bo.com.kibo.bl.intf.IEspecieBO;
 import bo.com.kibo.bl.intf.IFajaBO;
+import bo.com.kibo.bl.intf.IFormularioCensoBO;
 import bo.com.kibo.bl.intf.IUsuarioBO;
 
 /**
@@ -58,6 +66,42 @@ public class FactoriaObjetosNegocio {
             fajaBO = new FajaBO();
         }
         return fajaBO;
+    }
+
+    private IEspecieBO especieBO;
+
+    public IEspecieBO getEspecieBO() {
+        if (especieBO == null) {
+            especieBO = new EspecieBO();
+        }
+        return especieBO;
+    }
+
+    private ICargaBO cargaBO;
+
+    public ICargaBO getCargaBO() {
+        if (cargaBO == null) {
+            cargaBO = new CargaBO();
+        }
+        return cargaBO;
+    }
+    
+    private ICalidadBO calidadBO;
+    
+    public ICalidadBO getCalidadBO(){
+        if (calidadBO == null){
+            calidadBO = new CalidadBO();
+        }
+        return calidadBO;
+    }
+    
+    private IFormularioCensoBO formularioCensoBO;
+    
+    public IFormularioCensoBO getFormularioCensoBO(){
+        if (formularioCensoBO == null){
+            formularioCensoBO = new FormularioCensoBO();
+        }
+        return formularioCensoBO;
     }
 
 }

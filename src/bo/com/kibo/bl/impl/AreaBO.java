@@ -106,4 +106,14 @@ public class AreaBO extends GeoLugarBO<Area, IAreaDAO> implements IAreaBO {
         });
     }
 
+    @Override
+    public Area recuperarPorCodigo(final String codigo) {
+        return ejecutarEnTransaccion(new Callable<Area>() {
+            @Override
+            public Area call() throws Exception {
+                 return getObjetoDAO().recuperarPorCodigo(codigo);
+            }
+        });
+    }
+
 }

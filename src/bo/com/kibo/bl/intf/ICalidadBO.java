@@ -6,16 +6,12 @@
 
 package bo.com.kibo.bl.intf;
 
-import bo.com.kibo.entidades.Area;
+import bo.com.kibo.entidades.Calidad;
 
 /**
  *
  * @author Olvinho
  */
-public interface IAreaBO extends IGeoLugarBO<Area>{
-    
-    String getCodigo(Integer id);
-    
-    Area recuperarPorCodigo(String codigo);
+public interface ICalidadBO extends IGenericoBO<Calidad, Integer>{
     
 }

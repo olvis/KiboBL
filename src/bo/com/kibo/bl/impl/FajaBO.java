@@ -9,7 +9,6 @@ import bo.com.kibo.bl.exceptions.BusinessExceptionMessage;
 import bo.com.kibo.bl.intf.IFajaBO;
 import bo.com.kibo.dal.intf.IFajaDAO;
 import bo.com.kibo.entidades.Faja;
-import java.util.Objects;
 
 /**
  *

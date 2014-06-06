@@ -94,7 +94,7 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
             @Override
             public T call() throws Exception {
                 T entidad = getObjetoDAO().recuperarPorId(id);
-                if (entidad != null){
+                if (entidad != null) {
                     despuesDeRecuperar(entidad);
                 }
                 return entidad;
@@ -133,7 +133,10 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
                 if (mensajesError != null) {
                     throw mensajesError;
                 }
-                return getObjetoDAO().persistir(x);
+                preInsertar(x);
+                T aux = getObjetoDAO().persistir(x);
+                postActualizar(aux);
+                return aux;
             }
         });
     }
@@ -163,7 +166,10 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
                 if (mensajesError != null) {
                     throw mensajesError;
                 }
-                return getObjetoDAO().persistir(x);
+                preActualizar(x);
+                T aux = getObjetoDAO().persistir(x);
+                postActualizar(aux);
+                return aux;
             }
         });
     }
@@ -209,15 +215,28 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
     }
 
     abstract U getObjetoDAO();
-    
-    protected void despuesDeRecuperar(T entidad){
-        
+
+    protected void despuesDeRecuperar(T entidad) {
+
     }
-    
-    protected boolean isNullOrEmpty(String valor){
-        if ((valor == null) || ("".equals(valor)))
-            return true;
-                
-        return false;
+
+    protected boolean isNullOrEmpty(String valor) {
+        return (valor == null) || ("".equals(valor));
+    }
+
+    protected void preInsertar(T entidad) {
+
+    }
+
+    protected void postInsertar(T entidad) {
+
+    }
+
+    protected void preActualizar(T entidad) {
+
+    }
+
+    protected void postActualizar(T entidad) {
+
     }
 }

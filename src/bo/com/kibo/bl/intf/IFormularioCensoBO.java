@@ -6,16 +6,12 @@
 
 package bo.com.kibo.bl.intf;
 
-import bo.com.kibo.entidades.Area;
+import bo.com.kibo.entidades.FormularioCenso;
 
 /**
  *
  * @author Olvinho
  */
-public interface IAreaBO extends IGeoLugarBO<Area>{
-    
-    String getCodigo(Integer id);
-    
-    Area recuperarPorCodigo(String codigo);
+public interface IFormularioCensoBO extends IGenericoBO<FormularioCenso, Integer>{
     
 }
