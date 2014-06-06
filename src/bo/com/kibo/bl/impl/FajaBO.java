@@ -9,6 +9,8 @@ import bo.com.kibo.bl.exceptions.BusinessExceptionMessage;
 import bo.com.kibo.bl.intf.IFajaBO;
 import bo.com.kibo.dal.intf.IFajaDAO;
 import bo.com.kibo.entidades.Faja;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  *
@@ -115,7 +117,15 @@ public class FajaBO extends GeoLugarBO<Faja, IFajaDAO> implements IFajaBO {
             entidad.getArea().getCodigo();
         }
     }
-    
-    
 
+    @Override
+    public List<Faja> obtenerFajasSegunArea(final Integer idArea) {
+        return ejecutarEnTransaccion(new Callable<List<Faja>>() {
+            @Override
+            public List<Faja> call() throws Exception {
+                return getObjetoDAO().obtenerFajasSegunArea(idArea);
+            }
+        });
+    }
+    
 }
