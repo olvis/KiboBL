@@ -16,6 +16,7 @@ import bo.com.kibo.entidades.RolPermiso;
 import bo.com.kibo.entidades.RolPermisoId;
 import bo.com.kibo.entidades.Usuario;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
@@ -28,9 +29,8 @@ import java.util.logging.Logger;
  * @param <ID> Clase que que representa el Id
  * @param <U> Clase DAO
  */
-public abstract class ObjetoNegocioGenerico
-<T, ID extends Serializable, U extends IDAOGenerico<T, ID>> 
-implements IGenericoBO<T, ID> {
+public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extends IDAOGenerico<T, ID>>
+        implements IGenericoBO<T, ID> {
 
     private IDAOManager daoManager;
     protected Integer idUsuario;
@@ -110,6 +110,16 @@ implements IGenericoBO<T, ID> {
             @Override
             public List<T> call() {
                 return getObjetoDAO().obtenerTodos();
+            }
+        });
+    }
+
+    @Override
+    public List<T> obtenerNuevosObjetos(final Date fecha) {
+        return ejecutarEnTransaccion(new Callable<List<T>>() {
+            @Override
+            public List<T> call() {
+                return getObjetoDAO().obtenerNuevosObjetos(fecha);
             }
         });
     }

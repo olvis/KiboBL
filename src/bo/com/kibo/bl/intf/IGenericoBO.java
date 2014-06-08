@@ -7,6 +7,7 @@
 package bo.com.kibo.bl.intf;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,5 +22,6 @@ public interface IGenericoBO<T, ID extends Serializable>{
     T insertar(T entity);
     T actualizar(T entity);
     void setIdUsuario(Integer idUsuario);
+    List<T> obtenerNuevosObjetos(Date fecha);
     Integer getIdUsuario();
 }
