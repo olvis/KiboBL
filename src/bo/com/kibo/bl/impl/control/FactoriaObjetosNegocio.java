@@ -11,6 +11,9 @@ import bo.com.kibo.bl.impl.CargaBO;
 import bo.com.kibo.bl.impl.EspecieBO;
 import bo.com.kibo.bl.impl.FajaBO;
 import bo.com.kibo.bl.impl.FormularioCensoBO;
+import bo.com.kibo.bl.impl.FormularioCortaBO;
+import bo.com.kibo.bl.impl.RolBO;
+import bo.com.kibo.bl.impl.TrozaBO;
 import bo.com.kibo.bl.impl.UsuarioBO;
 import bo.com.kibo.bl.intf.IAreaBO;
 import bo.com.kibo.bl.intf.ICalidadBO;
@@ -18,6 +21,9 @@ import bo.com.kibo.bl.intf.ICargaBO;
 import bo.com.kibo.bl.intf.IEspecieBO;
 import bo.com.kibo.bl.intf.IFajaBO;
 import bo.com.kibo.bl.intf.IFormularioCensoBO;
+import bo.com.kibo.bl.intf.IFormularioCortaBO;
+import bo.com.kibo.bl.intf.IRolBO;
+import bo.com.kibo.bl.intf.ITrozaBO;
 import bo.com.kibo.bl.intf.IUsuarioBO;
 
 /**
@@ -85,23 +91,50 @@ public class FactoriaObjetosNegocio {
         }
         return cargaBO;
     }
-    
+
     private ICalidadBO calidadBO;
-    
-    public ICalidadBO getCalidadBO(){
-        if (calidadBO == null){
+
+    public ICalidadBO getCalidadBO() {
+        if (calidadBO == null) {
             calidadBO = new CalidadBO();
         }
         return calidadBO;
     }
-    
+
+    private ITrozaBO trozaBO;
+
+    public ITrozaBO getTrozaBO() {
+        if (trozaBO == null) {
+            trozaBO = new TrozaBO();
+        }
+        return trozaBO;
+    }
+
     private IFormularioCensoBO formularioCensoBO;
-    
-    public IFormularioCensoBO getFormularioCensoBO(){
-        if (formularioCensoBO == null){
+
+    public IFormularioCensoBO getFormularioCensoBO() {
+        if (formularioCensoBO == null) {
             formularioCensoBO = new FormularioCensoBO();
         }
         return formularioCensoBO;
+    }
+
+    private IFormularioCortaBO formularioCortaBO;
+
+    public IFormularioCortaBO getFormularioCortaBO() {
+        if (formularioCortaBO == null) {
+            formularioCortaBO = new FormularioCortaBO();
+        }
+        return formularioCortaBO;
+    }
+
+    private IRolBO rolBO;
+
+    public IRolBO getRolBO() {
+        if (rolBO == null) {
+            rolBO = new RolBO();
+        }
+        return rolBO;
     }
 
 }

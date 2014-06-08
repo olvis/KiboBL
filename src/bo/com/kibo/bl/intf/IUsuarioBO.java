@@ -15,5 +15,5 @@ import bo.com.kibo.entidades.Usuario;
 public interface IUsuarioBO extends IGenericoBO<Usuario, Integer>{
     
     Integer getIdUsuarioPorEmail(String email);
-    Usuario logear(String usuario, String pass);
+    Usuario loguear(String usuario, String pass);
 }

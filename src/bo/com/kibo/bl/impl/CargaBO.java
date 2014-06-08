@@ -9,6 +9,7 @@ import bo.com.kibo.bl.exceptions.BusinessExceptionMessage;
 import bo.com.kibo.bl.intf.ICargaBO;
 import bo.com.kibo.dal.intf.ICargaDAO;
 import bo.com.kibo.entidades.Carga;
+import java.util.concurrent.Callable;
 
 /**
  *
@@ -31,6 +32,7 @@ public class CargaBO extends ObjetoNegocioGenerico<Carga, Integer, ICargaDAO> im
         return 10602;
     }
 
+    @Override
     protected void validar(Carga entity) {
         boolean codigoValido = true;
         if (isNullOrEmpty(entity.getCodigo())) {
@@ -63,5 +65,15 @@ public class CargaBO extends ObjetoNegocioGenerico<Carga, Integer, ICargaDAO> im
             }
         }
 
+    }
+
+    @Override
+    public String getCodigo(final Integer id) {
+        return ejecutarEnTransaccion(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return getObjetoDAO().getCodigo(id);
+            }
+        });
     }
 }

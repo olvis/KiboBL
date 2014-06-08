@@ -28,7 +28,9 @@ import java.util.logging.Logger;
  * @param <ID> Clase que que representa el Id
  * @param <U> Clase DAO
  */
-public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extends IDAOGenerico<T, ID>> implements IGenericoBO<T, ID> {
+public abstract class ObjetoNegocioGenerico
+<T, ID extends Serializable, U extends IDAOGenerico<T, ID>> 
+implements IGenericoBO<T, ID> {
 
     private IDAOManager daoManager;
     protected Integer idUsuario;
@@ -135,7 +137,7 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
                 }
                 preInsertar(x);
                 T aux = getObjetoDAO().persistir(x);
-                postActualizar(aux);
+                postInsertar(aux);
                 return aux;
             }
         });

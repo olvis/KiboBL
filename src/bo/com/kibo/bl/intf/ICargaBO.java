@@ -14,4 +14,5 @@ import bo.com.kibo.entidades.Carga;
  */
 public interface ICargaBO extends IGenericoBO<Carga, Integer>{
     
+    String getCodigo(Integer id);
 }

@@ -6,17 +6,12 @@
 
 package bo.com.kibo.bl.intf;
 
-import bo.com.kibo.entidades.Troza;
-import java.util.List;
+import bo.com.kibo.entidades.FormularioCorta;
 
 /**
  *
  * @author Olvinho
  */
-public interface ITrozaBO extends IGenericoBO<Troza, Integer>{
-
-    List<Troza> getTrozasParaCorta(Integer id);
-    
-    String getCodigo(Integer numero);
+public interface IFormularioCortaBO extends IGenericoBO<FormularioCorta, Integer>{
     
 }

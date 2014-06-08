@@ -10,12 +10,16 @@ import bo.com.kibo.bl.intf.IFormularioCensoBO;
 import bo.com.kibo.dal.intf.IFormularioCensoDAO;
 import bo.com.kibo.entidades.DetalleCenso;
 import bo.com.kibo.entidades.FormularioCenso;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Olvinho
  */
-public class FormularioCensoBO extends ObjetoNegocioGenerico<FormularioCenso, Integer, IFormularioCensoDAO> implements IFormularioCensoBO{
+public class FormularioCensoBO
+        extends ObjetoNegocioGenerico<FormularioCenso, Integer, IFormularioCensoDAO>
+        implements IFormularioCensoBO {
 
     @Override
     protected int IdPermisoInsertar() {
@@ -85,22 +89,19 @@ public class FormularioCensoBO extends ObjetoNegocioGenerico<FormularioCenso, In
         if (entity.getDetalle().isEmpty()) {
             appendException(new BusinessExceptionMessage("Debe agregar ágregar árboles al detalle", "detalle"));
         }
+
+        Map<String, Integer> codigos = new HashMap<>();
         //Validamos el detalle buscando duplicados
-        for (int i = 0; i < entity.getDetalle().size() - 1; i++) {
+        for (int i = 0; i < entity.getDetalle().size(); i++) {
             validarLineaDetalle(entity.getDetalle().get(i), i + 1, entity);
-            for (int j = i + 1; j < entity.getDetalle().size(); j++) {
-                if (entity.getDetalle().get(i).getCodigo().equalsIgnoreCase(entity.getDetalle().get(j).getCodigo())) {
-                    appendException(new BusinessExceptionMessage("Registro duplicado con fila " + (j + 1), "detalle", i + 1));
-                }
-                if (j == entity.getDetalle().size()) {
-                    validarLineaDetalle(entity.getDetalle().get(j), j + 1, entity);
-                }
+            Integer filaDuplicada = codigos.get(entity.getDetalle().get(i).getCodigo());
+            if (filaDuplicada != null) {
+                appendException(new BusinessExceptionMessage("Registro duplicado con fila " + filaDuplicada, "detalle", i + 1));
+            }
+            if (!isNullOrEmpty(entity.getDetalle().get(i).getCodigo())) {
+                codigos.put(entity.getDetalle().get(i).getCodigo(), i + 1);
             }
         }
-        if (entity.getDetalle().size() == 1) {
-            validarLineaDetalle(entity.getDetalle().get(0), 1, entity);
-        }
-
     }
 
     private void validarLineaDetalle(DetalleCenso linea, int index, FormularioCenso cabecera) {
@@ -157,7 +158,7 @@ public class FormularioCensoBO extends ObjetoNegocioGenerico<FormularioCenso, In
                     appendException(new BusinessExceptionMessage("El campo calidad es requerido", "calidad", index));
                 } else {
                     linea.getCalidad().setId(getDaoManager().getCalidadDAO().getIdPorCodigo(linea.getCalidad().getCodigo()));
-                    if (linea.getEspecie().getId() == null) {
+                    if (linea.getCalidad().getId() == null) {
                         appendException(new BusinessExceptionMessage("La calidad '" + linea.getCalidad().getCodigo() + "' no existe", "calidad", index));
                     }
                 }
@@ -187,5 +188,10 @@ public class FormularioCensoBO extends ObjetoNegocioGenerico<FormularioCenso, In
         }
 
     }
-    
+
+    @Override
+    protected void despuesDeRecuperar(FormularioCenso entidad) {
+        entidad.getDetalle().size();
+    }
+
 }
