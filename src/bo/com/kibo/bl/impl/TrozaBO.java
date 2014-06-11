@@ -88,7 +88,7 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
             seccion.setCalidad(linea.getTroza().getCalidad());
         }
         
-        seccion.setCalidad(linea.getCalidad());
+        //seccion.setCalidad(linea.getCalidad());
         seccion.setExiste(Troza.EXISTE_EXISTE);
         seccion.setFaja(linea.getTroza().getFaja());
         seccion.setPadre(linea.getTroza());

@@ -138,7 +138,7 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
                     throw new BusinessException("El usuario especificado no existe");
                 }
                 if (!tienePermisoInsertar()) {
-                    throw new PermisosInsuficientesException("No tiene los privilegios necesarios para continuar, contacte al administrador");
+                    throw new PermisosInsuficientesException("No tiene los privilegios necesarios para ejecutar esta acción, contacte al administrador");
                 }
                 mensajesError = null;
                 validar(x);
@@ -171,7 +171,7 @@ public abstract class ObjetoNegocioGenerico<T, ID extends Serializable, U extend
                     throw new BusinessException("El usuario especificado no existe");
                 }
                 if (!tienePermisoModificar()) {
-                    throw new PermisosInsuficientesException("No tiene los privilegios necesarios para continuar, contacte al administrador");
+                    throw new PermisosInsuficientesException("No tiene los privilegios necesarios para ejecutar esta acción, contacte al administrador");
                 }
                 mensajesError = null;
                 validar(x);
