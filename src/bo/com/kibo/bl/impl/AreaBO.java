@@ -77,8 +77,8 @@ public class AreaBO extends GeoLugarBO<Area, IAreaDAO> implements IAreaBO {
         }
 
         //Zona UTM
-        if ((entity.getZonaUTM() != null) && (!(entity.getZonaUTM() >= 1 && entity.getZonaUTM() <= 11))) {
-            appendException(new BusinessExceptionMessage("La zona debe estar comprendida entre 1 y 11", "zonaUTM"));
+        if ((entity.getZonaUTM() != null) && (!(entity.getZonaUTM() >= 1 && entity.getZonaUTM() <= 60))) {
+            appendException(new BusinessExceptionMessage("La zona debe estar comprendida entre 1 y 60", "zonaUTM"));
         }
 
         //Banda UMT

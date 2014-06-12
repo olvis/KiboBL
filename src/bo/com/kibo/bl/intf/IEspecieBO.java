@@ -14,4 +14,5 @@ import bo.com.kibo.entidades.Especie;
  */
 public interface IEspecieBO extends IGenericoBO<Especie, Integer>{
     
+    String getNombre(Integer id);
 }

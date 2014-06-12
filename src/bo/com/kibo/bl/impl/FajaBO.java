@@ -59,7 +59,11 @@ public class FajaBO extends GeoLugarBO<Faja, IFajaDAO> implements IFajaBO {
         } else {
             if (entity.getArea().getId() != null) {
                 if (!(getDaoManager().getAreaDAO().checkId(entity.getArea().getId()))) {
-                    appendException(new BusinessExceptionMessage("El área '" + entity.getArea().getId() + "' no existe", "area"));
+                    if (entity.getArea().getId() == 0){
+                        appendException(new BusinessExceptionMessage("El área es un campo requerido", "area"));
+                    }else{
+                        appendException(new BusinessExceptionMessage("El área '" + entity.getArea().getId() + "' no existe", "area"));
+                    }
                     codigoValido = false;
                 }
             } else {

@@ -9,6 +9,7 @@ import bo.com.kibo.bl.exceptions.BusinessExceptionMessage;
 import bo.com.kibo.bl.intf.ICalidadBO;
 import bo.com.kibo.dal.intf.ICalidadDAO;
 import bo.com.kibo.entidades.Calidad;
+import java.util.concurrent.Callable;
 
 /**
  *
@@ -71,4 +72,14 @@ public class CalidadBO extends ObjetoNegocioGenerico<Calidad, Integer, ICalidadD
 
     }
 
+    @Override
+    public String getCodigo(final Integer id) {
+        return ejecutarEnTransaccion(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return getObjetoDAO().getCodigo(id);
+            }
+        });
+    }
+    
 }

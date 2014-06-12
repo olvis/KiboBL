@@ -14,7 +14,7 @@ import java.util.List;
  * @author Olvinho
  */
 public class BusinessException extends RuntimeException{
-    public List<BusinessExceptionMessage> messages = new ArrayList<>();
+    private List<BusinessExceptionMessage> messages = new ArrayList<>();
 
     public BusinessException(String message) {
         super(message);

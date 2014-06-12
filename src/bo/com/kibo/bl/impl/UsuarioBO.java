@@ -198,6 +198,7 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
         return cadenaAleatoria;
     }
     
+    @Override
     public String encriptar(String texto){
         return getStringMessageDigest(texto, SHA256);
     }

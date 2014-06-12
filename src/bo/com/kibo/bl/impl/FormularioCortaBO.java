@@ -49,11 +49,15 @@ public class FormularioCortaBO
         }
 
         if (entity.getArea() == null) {
-            appendException(new BusinessExceptionMessage("El campo área es requerido", "area"));
+
         } else {
             if (entity.getArea().getId() != null) {
                 if (!(getDaoManager().getAreaDAO().checkId(entity.getArea().getId()))) {
-                    appendException(new BusinessExceptionMessage("El área '" + entity.getArea().getId() + "' no existe", "area"));
+                    if (entity.getArea().getId() == 0) {
+                        appendException(new BusinessExceptionMessage("El campo área es requerido", "area"));
+                    } else {
+                        appendException(new BusinessExceptionMessage("El área '" + entity.getArea().getId() + "' no existe", "area"));
+                    }
                 }
             } else {
                 //Buscamos por Codigo
@@ -133,7 +137,11 @@ public class FormularioCortaBO
         } else {
             if (linea.getTroza().getNumero() != null) {
                 if (!getDaoManager().getTrozaDAO().checkNumero(linea.getTroza().getNumero())) {
-                    appendException(new BusinessExceptionMessage("El árbol '" + linea.getTroza().getNumero() + "' no existe", "arbol", index));
+                    if (linea.getTroza().getNumero() == 0) {
+                        appendException(new BusinessExceptionMessage("Debe especificar el árbol", "arbol", index));
+                    } else {
+                        appendException(new BusinessExceptionMessage("El árbol '" + linea.getTroza().getNumero() + "' no existe", "arbol", index));
+                    }
                     trozaValida = false;
                 } else {
                     linea.setTroza(getDaoManager().getTrozaDAO().obtenerPorId(linea.getTroza().getNumero()));
@@ -161,12 +169,17 @@ public class FormularioCortaBO
         //Carga
         if (linea.getCarga() != null) {
             if (linea.getCarga().getId() != null) {
-                if (!getDaoManager().getCargaDAO().checkId(linea.getCarga().getId())) {
-                    appendException(new BusinessExceptionMessage("La carga '" + linea.getCarga().getId() + "' no existe", "carga", index));
-                    cargaValida = false;
+                if (linea.getCarga().getId() == 0) {
+                    linea.setCarga(null);
                 } else {
-                    linea.setCarga(getDaoManager().getCargaDAO().obtenerPorId(linea.getCarga().getId()));
+                    if (!getDaoManager().getCargaDAO().checkId(linea.getCarga().getId())) {
+                        appendException(new BusinessExceptionMessage("La carga '" + linea.getCarga().getId() + "' no existe", "carga", index));
+                        cargaValida = false;
+                    } else {
+                        linea.setCarga(getDaoManager().getCargaDAO().obtenerPorId(linea.getCarga().getId()));
+                    }
                 }
+
             } else {
                 if (isNullOrEmpty(linea.getCarga().getCodigo())) {
                     linea.setCarga(null);
@@ -204,9 +217,14 @@ public class FormularioCortaBO
         //Especie
         if (linea.getEspecie() != null) {
             if (linea.getEspecie().getId() != null) {
-                if (!getDaoManager().getEspecieDAO().checkId(linea.getEspecie().getId())) {
-                    appendException(new BusinessExceptionMessage("La especie '" + linea.getEspecie().getId() + "' no existe", "especie", index));
+                if (linea.getEspecie().getId() == 0) {
+                    linea.setEspecie(null);
+                } else {
+                    if (!getDaoManager().getEspecieDAO().checkId(linea.getEspecie().getId())) {
+                        appendException(new BusinessExceptionMessage("La especie '" + linea.getEspecie().getId() + "' no existe", "especie", index));
+                    }
                 }
+
             } else {
                 if (isNullOrEmpty(linea.getEspecie().getNombre())) {
                     linea.setEspecie(null);
@@ -243,9 +261,14 @@ public class FormularioCortaBO
         //Calidad
         if (linea.getCalidad() != null) {
             if (linea.getCalidad().getId() != null) {
-                if (!getDaoManager().getCalidadDAO().checkId(linea.getCalidad().getId())) {
-                    appendException(new BusinessExceptionMessage("La calidad '" + linea.getEspecie().getId() + "' no existe", "calidad", index));
+                if (linea.getCalidad().getId() == 0) {
+                    linea.setCalidad(null);
+                } else {
+                    if (!getDaoManager().getCalidadDAO().checkId(linea.getCalidad().getId())) {
+                        appendException(new BusinessExceptionMessage("La calidad '" + linea.getEspecie().getId() + "' no existe", "calidad", index));
+                    }
                 }
+
             } else {
                 if (isNullOrEmpty(linea.getCalidad().getCodigo())) {
                     linea.setCalidad(null);
@@ -256,7 +279,7 @@ public class FormularioCortaBO
                     }
                 }
             }
-        } 
+        }
     }
 
     @Override

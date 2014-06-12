@@ -52,11 +52,11 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
     }
 
     @Override
-    public List<Troza> getTrozasParaCorta(final Integer idArea) {
+    public List<Troza> getTrozasParaTala(final Integer idArea) {
         return ejecutarEnTransaccion(new Callable<List<Troza>>() {
             @Override
             public List<Troza> call() throws Exception {
-               return getDaoManager().getTrozaDAO().getTrozasParaCorta(idArea);
+               return getDaoManager().getTrozaDAO().getTrozasParaTala(idArea);
             }
         });
     }
@@ -127,6 +127,30 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
         if (linea.getLargo() != null){
             linea.getTroza().setLargo(linea.getLargo());
         }
+    }
+
+    @Override
+    public List<String> getCodigosTrozaParaTala(final Integer idArea, final String codigoParcial) {
+        return ejecutarEnTransaccion(new Callable<List<String>>() {
+            @Override
+            public List<String> call() throws Exception {
+                return getObjetoDAO().getCodigosTrozaParaTala(idArea, codigoParcial);
+            }
+        });
+    }
+
+    @Override
+    public Troza obtenerPorCodigo(final String codigo,final Integer idArea) {
+        return ejecutarEnTransaccion(new Callable<Troza>() {
+            @Override
+            public Troza call() throws Exception {
+                Integer id = getObjetoDAO().getIdPorCodigoArea(codigo, idArea);
+                if (id == null){
+                    return null;
+                }
+                return getObjetoDAO().recuperarPorId(id);
+            }
+        });
     }
 
     

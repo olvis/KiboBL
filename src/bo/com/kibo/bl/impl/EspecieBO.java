@@ -10,6 +10,7 @@ import bo.com.kibo.bl.exceptions.BusinessExceptionMessage;
 import bo.com.kibo.bl.intf.IEspecieBO;
 import bo.com.kibo.dal.intf.IEspecieDAO;
 import bo.com.kibo.entidades.Especie;
+import java.util.concurrent.Callable;
 
 /**
  *
@@ -76,6 +77,16 @@ public class EspecieBO extends ObjetoNegocioGenerico<Especie, Integer, IEspecieD
         if ((entity.getDmc() != null) && (entity.getDmc() < 0)){
             appendException(new BusinessExceptionMessage("El DMC debe ser mayor que cero", "dmc"));
         }
+    }
+
+    @Override
+    public String getNombre(final Integer id) {
+        return ejecutarEnTransaccion(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return getObjetoDAO().getNombre(id);
+            }
+        });
     }
     
 }

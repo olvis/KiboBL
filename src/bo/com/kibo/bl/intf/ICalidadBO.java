@@ -14,4 +14,6 @@ import bo.com.kibo.entidades.Calidad;
  */
 public interface ICalidadBO extends IGenericoBO<Calidad, Integer>{
     
+    String getCodigo(Integer id);
+    
 }
