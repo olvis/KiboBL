@@ -27,10 +27,10 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
     ITrozaDAO getObjetoDAO() {
         return getDaoManager().getTrozaDAO();
     }
-    
-    public Troza crearTroza(DetalleCenso trozaCenso, FormularioCenso censo){
+
+    public Troza crearTroza(DetalleCenso trozaCenso, FormularioCenso censo) {
         Troza troza = new Troza();
-        
+
         troza.setCodigo(trozaCenso.getCodigo());
         troza.setArea(censo.getArea());
         troza.setEspecie(trozaCenso.getEspecie());
@@ -41,9 +41,9 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
         troza.setY(trozaCenso.getY());
         troza.setFormularioCenso(censo);
         troza.setFaja(censo.getFaja());
-        
+
         troza = getObjetoDAO().persistir(troza);
-        return  troza;
+        return troza;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
         return ejecutarEnTransaccion(new Callable<List<Troza>>() {
             @Override
             public List<Troza> call() throws Exception {
-               return getDaoManager().getTrozaDAO().getTrozasParaTala(idArea);
+                return getDaoManager().getTrozaDAO().getTrozasParaTala(idArea);
             }
         });
     }
@@ -70,61 +70,65 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
             }
         });
     }
-    
-    public void crearSeccion(DetalleCorta linea, FormularioCorta formulario){
+
+    public Troza crearSeccion(DetalleCorta linea, FormularioCorta formulario) {
         Troza seccion = new Troza();
         seccion.setCodigo(linea.getTroza().getCodigo() + Troza.SEPARADOR_CODIGO + linea.getCarga().getCodigo());
         seccion.setArea(formulario.getArea());
-        
-        if (linea.getEspecie() != null){
+
+        if (linea.getEspecie() != null) {
             seccion.setEspecie(linea.getEspecie());
-        }else{
+        } else {
             seccion.setEspecie(linea.getTroza().getEspecie());
         }
-        
-        if(linea.getCalidad() != null){
+
+        if (linea.getCalidad() != null) {
             seccion.setCalidad(linea.getCalidad());
-        }else{
+        } else {
             seccion.setCalidad(linea.getTroza().getCalidad());
         }
-        
+
         //seccion.setCalidad(linea.getCalidad());
         seccion.setExiste(Troza.EXISTE_EXISTE);
         seccion.setFaja(linea.getTroza().getFaja());
         seccion.setPadre(linea.getTroza());
-        
+
         byte estadoSeccion = Troza.ESTADO_CENSADA;
-        switch(formulario.getTipo()){
+        switch (formulario.getTipo()) {
             case EncabezadoFormulario.TIPO_FORMULARIO_CORTA:
                 estadoSeccion = Troza.ESTADO_TALADA;
                 seccion.setFormularioCorta(formulario);
                 break;
         }
         seccion.setEstado(estadoSeccion);
-        getObjetoDAO().persistir(seccion);
+        seccion.setdMayor(linea.getDmayor());
+        seccion.setdMenor(linea.getDmenor());
+        seccion.setLargo(linea.getLargo());
+        seccion = getObjetoDAO().persistir(seccion);
         linea.getTroza().setExiste(Troza.EXISTE_SECCIONADA);
+        return seccion;
     }
-    
-    public void corregirMedidas(DetalleCorta linea){
-        if (linea.getEspecie() != null){
+
+    public void corregirMedidas(DetalleCorta linea) {
+        if (linea.getEspecie() != null) {
             linea.getTroza().setEspecie(linea.getEspecie());
         }
-        
-        if (linea.getCalidad() != null){
+
+        if (linea.getCalidad() != null) {
             linea.getTroza().setCalidad(linea.getCalidad());
-            
+
         }
-        
-        if (linea.getDmayor() != null){
+
+        if (linea.getDmayor() != null) {
             linea.getTroza().setdMayor(linea.getDmayor());
         }
-        
-        if (linea.getDmenor() != null){
+
+        if (linea.getDmenor() != null) {
             linea.getTroza().setdMenor(linea.getDmenor());
-            
+
         }
-        
-        if (linea.getLargo() != null){
+
+        if (linea.getLargo() != null) {
             linea.getTroza().setLargo(linea.getLargo());
         }
     }
@@ -140,12 +144,12 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
     }
 
     @Override
-    public Troza obtenerPorCodigo(final String codigo,final Integer idArea) {
+    public Troza obtenerPorCodigo(final String codigo, final Integer idArea) {
         return ejecutarEnTransaccion(new Callable<Troza>() {
             @Override
             public Troza call() throws Exception {
                 Integer id = getObjetoDAO().getIdPorCodigoArea(codigo, idArea);
-                if (id == null){
+                if (id == null) {
                     return null;
                 }
                 return getObjetoDAO().recuperarPorId(id);
@@ -153,6 +157,4 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
         });
     }
 
-    
-    
 }

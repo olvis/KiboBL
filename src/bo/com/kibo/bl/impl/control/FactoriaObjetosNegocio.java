@@ -12,6 +12,7 @@ import bo.com.kibo.bl.impl.EspecieBO;
 import bo.com.kibo.bl.impl.FajaBO;
 import bo.com.kibo.bl.impl.FormularioCensoBO;
 import bo.com.kibo.bl.impl.FormularioCortaBO;
+import bo.com.kibo.bl.impl.ReporteBO;
 import bo.com.kibo.bl.impl.RolBO;
 import bo.com.kibo.bl.impl.TrozaBO;
 import bo.com.kibo.bl.impl.UsuarioBO;
@@ -22,6 +23,7 @@ import bo.com.kibo.bl.intf.IEspecieBO;
 import bo.com.kibo.bl.intf.IFajaBO;
 import bo.com.kibo.bl.intf.IFormularioCensoBO;
 import bo.com.kibo.bl.intf.IFormularioCortaBO;
+import bo.com.kibo.bl.intf.IReporteBO;
 import bo.com.kibo.bl.intf.IRolBO;
 import bo.com.kibo.bl.intf.ITrozaBO;
 import bo.com.kibo.bl.intf.IUsuarioBO;
@@ -135,6 +137,15 @@ public class FactoriaObjetosNegocio {
             rolBO = new RolBO();
         }
         return rolBO;
+    }
+    
+    private IReporteBO reporteBO;
+    
+    public IReporteBO getReporteBO(){
+        if (reporteBO == null){
+            reporteBO = new ReporteBO();
+        }
+        return reporteBO;
     }
 
 }
