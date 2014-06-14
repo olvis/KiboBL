@@ -44,7 +44,7 @@ public class FormularioCensoBO
         }
 
         if (entity.getArea() == null) {
-
+            appendException(new BusinessExceptionMessage("El campo área es requerido", "area"));
         } else {
             if (entity.getArea().getId() != null) {
                 if (!(getDaoManager().getAreaDAO().checkId(entity.getArea().getId()))) {
@@ -53,7 +53,7 @@ public class FormularioCensoBO
                     } else {
                         appendException(new BusinessExceptionMessage("El área '" + entity.getArea().getId() + "' no existe", "area"));
                     }
-                    entity.setArea(null);
+                    //entity.setArea(null);
                 }
             } else {
                 //Buscamos por Codigo
@@ -77,12 +77,12 @@ public class FormularioCensoBO
         } else {
             if (entity.getFaja().getId() != null) {
                 if (!(getDaoManager().getFajaDAO().checkId(entity.getFaja().getId()))) {
-                    if (entity.getFaja().getId() == 0){
+                    if (entity.getFaja().getId() == 0) {
                         appendException(new BusinessExceptionMessage("El campo faja es requerido", "faja"));
-                    }else{
+                    } else {
                         appendException(new BusinessExceptionMessage("La faja '" + entity.getFaja().getId() + "' no existe", "faja"));
                     }
-                    
+
                 }
             } else {
                 entity.getFaja().setId(getDaoManager().getFajaDAO().getIdPorBloqueYNumero(entity.getFaja().getBloque(), entity.getFaja().getNumero()));
@@ -131,10 +131,10 @@ public class FormularioCensoBO
         } else {
             if (linea.getEspecie().getId() != null) {
                 if (!getDaoManager().getEspecieDAO().checkId(linea.getEspecie().getId())) {
-                    if (linea.getEspecie().getId() == 0){
-                         appendException(new BusinessExceptionMessage("El campo especie es requerido", "especie", index));
-                    }else{
-                         appendException(new BusinessExceptionMessage("La especie '" + linea.getEspecie().getId() + "' no existe", "especie", index));
+                    if (linea.getEspecie().getId() == 0) {
+                        appendException(new BusinessExceptionMessage("El campo especie es requerido", "especie", index));
+                    } else {
+                        appendException(new BusinessExceptionMessage("La especie '" + linea.getEspecie().getId() + "' no existe", "especie", index));
                     }
                 }
             } else {
@@ -166,11 +166,11 @@ public class FormularioCensoBO
         } else {
             if (linea.getCalidad().getId() != null) {
                 if (!getDaoManager().getCalidadDAO().checkId(linea.getCalidad().getId())) {
-                    if (linea.getCalidad().getId() == 0){
+                    if (linea.getCalidad().getId() == 0) {
                         appendException(new BusinessExceptionMessage("El campo calidad es requerido", "calidad", index));
-                    }else{
-                         appendException(new BusinessExceptionMessage("La calidad '" + linea.getEspecie().getId() + "' no existe", "calidad", index));
-                    } 
+                    } else {
+                        appendException(new BusinessExceptionMessage("La calidad '" + linea.getEspecie().getId() + "' no existe", "calidad", index));
+                    }
                 }
             } else {
                 if (isNullOrEmpty(linea.getCalidad().getCodigo())) {

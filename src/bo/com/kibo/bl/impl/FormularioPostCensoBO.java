@@ -6,40 +6,25 @@
 package bo.com.kibo.bl.impl;
 
 import bo.com.kibo.bl.exceptions.BusinessExceptionMessage;
-import bo.com.kibo.bl.intf.IFormularioCortaBO;
-import bo.com.kibo.dal.intf.IFormularioCortaDAO;
-import bo.com.kibo.entidades.DetalleCorta;
-import bo.com.kibo.entidades.FormularioCorta;
+import bo.com.kibo.dal.intf.IDAOGenerico;
 import bo.com.kibo.entidades.Troza;
+import bo.com.kibo.entidades.intf.IDetallePostCenso;
+import bo.com.kibo.entidades.intf.IFormularioPostCenso;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  *
  * @author Olvinho
+ * @param <T>
+ * @param <U>
  */
-public class FormularioCortaBO
-        extends ObjetoNegocioGenerico<FormularioCorta, Integer, IFormularioCortaDAO>
-        implements IFormularioCortaBO {
+public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U extends IDAOGenerico<T, Integer>>
+        extends ObjetoNegocioGenerico<T , Integer, U>{
 
     @Override
-    IFormularioCortaDAO getObjetoDAO() {
-        return getDaoManager().getFormularioCortaDAO();
-    }
-
-    @Override
-    protected int IdPermisoInsertar() {
-        return 10501;
-    }
-
-    @Override
-    protected void despuesDeRecuperar(FormularioCorta entidad) {
-        entidad.getDetalle().size();
-    }
-
-    @Override
-    protected void validar(FormularioCorta entity) {
-        if (entity.getId() != null) {
+    protected final void validar(T entity) {
+         if (entity.getId() != null) {
             appendException(new BusinessExceptionMessage("La actualización no esta permitida en este formulario"));
             return;
         }
@@ -77,15 +62,17 @@ public class FormularioCortaBO
         }
 
         if (entity.getDetalle().isEmpty()) {
-            appendException(new BusinessExceptionMessage("Debe agregar ágregar árboles al detalle", "detalle"));
+            appendException(new BusinessExceptionMessage("Debe agregar agregar árboles al detalle", "detalle"));
         }
-
+        
+        validarEncabezado(entity);
+        //Validamos detalle
         Map<String, Integer> codigos = new HashMap<>();
         Map<String, Integer> trozasSinCarga = new HashMap<>();
         Map<String, Integer> trozasConCarga = new HashMap<>();
         //Validamos el detalle buscando duplicados
         for (int i = 0; i < entity.getDetalle().size(); i++) {
-            DetalleCorta detalle = entity.getDetalle().get(i);
+            IDetallePostCenso detalle = (IDetallePostCenso)entity.getDetalle().get(i);
             validarLineaDetalle(detalle, i + 1, entity);
             if ((detalle.getTroza() != null) && !(isNullOrEmpty(detalle.getTroza().getCodigo()))) {
                 Integer filaDuplicada = codigos.get(getCodigo(detalle));
@@ -116,8 +103,8 @@ public class FormularioCortaBO
             }
         }
     }
-
-    private String getCodigo(DetalleCorta linea) {
+    
+    private String getCodigo(IDetallePostCenso linea) {
         String codigo;
         codigo = linea.getTroza().getCodigo();
         if (linea.getCarga() != null) {
@@ -125,10 +112,9 @@ public class FormularioCortaBO
         }
         return codigo;
     }
-
-    private void validarLineaDetalle(DetalleCorta linea, int index, FormularioCorta cabecera) {
+    
+    private void validarLineaDetalle(IDetallePostCenso linea, int index, T cabecera) {
         //Cargar Troza y Carga
-
         boolean trozaValida = true;
         //Troza
         if (linea.getTroza() == null) {
@@ -153,7 +139,7 @@ public class FormularioCortaBO
                 } else if ((cabecera.getArea() != null) && (cabecera.getArea().getId() != null)) {
                     Integer numero = getDaoManager().getTrozaDAO().getIdPorCodigoArea(linea.getTroza().getCodigo(), cabecera.getArea().getId());
                     if (numero == null) {
-                        appendException(new BusinessExceptionMessage("El árbol '" + linea.getTroza().getCodigo() + "' no existe", "arbol", index));
+                        appendException(new BusinessExceptionMessage("El árbol '" + linea.getTroza().getCodigo() + "' no existe", "troza", index));
                         trozaValida = false;
                     } else {
                         linea.setTroza(getDaoManager().getTrozaDAO().obtenerPorId(numero));
@@ -281,19 +267,8 @@ public class FormularioCortaBO
             }
         }
     }
-
-    @Override
-    protected void postInsertar(FormularioCorta entidad) {
-        for (DetalleCorta detalle : entidad.getDetalle()) {
-            TrozaBO trozaBO = new TrozaBO();
-            if (detalle.getCarga() == null) {
-                detalle.getTroza().setEstado(Troza.ESTADO_TALADA);
-                detalle.getTroza().setFormularioCorta(entidad);
-                trozaBO.corregirMedidas(detalle);
-            } else {
-                //Seccionamos
-                trozaBO.crearSeccion(detalle, entidad);
-            }
-        }
-    }
+    
+    protected abstract void validarEncabezado(T entity);
+    
+    
 }
