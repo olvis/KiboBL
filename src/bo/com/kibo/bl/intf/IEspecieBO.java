@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package bo.com.kibo.bl.intf;
 
 import bo.com.kibo.entidades.Especie;
@@ -12,7 +11,7 @@ import bo.com.kibo.entidades.Especie;
  *
  * @author Olvinho
  */
-public interface IEspecieBO extends IGenericoBO<Especie, Integer>{
-    
+public interface IEspecieBO extends IGenericoBO<Especie, Integer> {
+
     String getNombre(Integer id);
 }

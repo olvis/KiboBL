@@ -5,14 +5,13 @@
  */
 package bo.com.kibo.bl.intf;
 
-import bo.com.kibo.entidades.Rol;
-import bo.com.kibo.entidades.Usuario;
+import bo.com.kibo.entidades.FormularioMovimiento;
 
 /**
  *
  * @author Olvinho
  */
-public interface IRolBO extends IGenericoBO<Rol, Integer> {
+public interface IFormularioMovimientoBO
+        extends IGenericoBO<FormularioMovimiento, Integer> {
 
-    boolean verificarPermiso(Integer idPermiso, Usuario usuario);
 }

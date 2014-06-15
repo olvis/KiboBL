@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package bo.com.kibo.bl.exceptions;
 
 /**
  *
  * @author Olvinho
  */
-public class PermisosInsuficientesException  extends  BusinessException{
+public class PermisosInsuficientesException extends BusinessException {
 
     public PermisosInsuficientesException(String message) {
         super(message);
@@ -20,5 +19,4 @@ public class PermisosInsuficientesException  extends  BusinessException{
         super(message, cause);
     }
 
-    
 }

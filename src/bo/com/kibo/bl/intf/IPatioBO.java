@@ -5,14 +5,17 @@
  */
 package bo.com.kibo.bl.intf;
 
-import bo.com.kibo.entidades.Rol;
-import bo.com.kibo.entidades.Usuario;
+import bo.com.kibo.entidades.Patio;
+import java.util.List;
 
 /**
  *
  * @author Olvinho
  */
-public interface IRolBO extends IGenericoBO<Rol, Integer> {
+public interface IPatioBO extends IGeoLugarBO<Patio> {
 
-    boolean verificarPermiso(Integer idPermiso, Usuario usuario);
+    List<Patio> obtenerPatiosSegunArea(Integer idArea);
+
+    String getNombre(Integer id);
+
 }

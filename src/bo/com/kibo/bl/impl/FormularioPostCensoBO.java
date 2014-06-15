@@ -20,11 +20,11 @@ import java.util.Map;
  * @param <U>
  */
 public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U extends IDAOGenerico<T, Integer>>
-        extends ObjetoNegocioGenerico<T , Integer, U>{
+        extends ObjetoNegocioGenerico<T, Integer, U> {
 
     @Override
     protected final void validar(T entity) {
-         if (entity.getId() != null) {
+        if (entity.getId() != null) {
             appendException(new BusinessExceptionMessage("La actualización no esta permitida en este formulario"));
             return;
         }
@@ -38,11 +38,7 @@ public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U ex
         } else {
             if (entity.getArea().getId() != null) {
                 if (!(getDaoManager().getAreaDAO().checkId(entity.getArea().getId()))) {
-                    if (entity.getArea().getId() == 0) {
-                        appendException(new BusinessExceptionMessage("El campo área es requerido", "area"));
-                    } else {
-                        appendException(new BusinessExceptionMessage("El área '" + entity.getArea().getId() + "' no existe", "area"));
-                    }
+                    appendException(new BusinessExceptionMessage("El área '" + entity.getArea().getId() + "' no existe", "area"));
                 }
             } else {
                 //Buscamos por Codigo
@@ -64,7 +60,7 @@ public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U ex
         if (entity.getDetalle().isEmpty()) {
             appendException(new BusinessExceptionMessage("Debe agregar agregar árboles al detalle", "detalle"));
         }
-        
+
         validarEncabezado(entity);
         //Validamos detalle
         Map<String, Integer> codigos = new HashMap<>();
@@ -72,7 +68,7 @@ public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U ex
         Map<String, Integer> trozasConCarga = new HashMap<>();
         //Validamos el detalle buscando duplicados
         for (int i = 0; i < entity.getDetalle().size(); i++) {
-            IDetallePostCenso detalle = (IDetallePostCenso)entity.getDetalle().get(i);
+            IDetallePostCenso detalle = (IDetallePostCenso) entity.getDetalle().get(i);
             validarLineaDetalle(detalle, i + 1, entity);
             if ((detalle.getTroza() != null) && !(isNullOrEmpty(detalle.getTroza().getCodigo()))) {
                 Integer filaDuplicada = codigos.get(getCodigo(detalle));
@@ -80,7 +76,6 @@ public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U ex
                     appendException(new BusinessExceptionMessage("Registro duplicado con fila " + filaDuplicada, "detalle", i + 1));
                 }
                 codigos.put(getCodigo(detalle), i + 1);
-
                 if (detalle.getCarga() != null) {
                     //Sin carga
                     Integer aux = trozasConCarga.get(detalle.getTroza().getCodigo());
@@ -103,49 +98,45 @@ public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U ex
             }
         }
     }
-    
+
     private String getCodigo(IDetallePostCenso linea) {
         String codigo;
         codigo = linea.getTroza().getCodigo();
         if (linea.getCarga() != null) {
-            codigo += "." + linea.getCarga().getCodigo();
+            codigo = linea.getCodigoCarga();
         }
         return codigo;
     }
-    
+
     private void validarLineaDetalle(IDetallePostCenso linea, int index, T cabecera) {
         //Cargar Troza y Carga
         boolean trozaValida = true;
         //Troza
         if (linea.getTroza() == null) {
-            appendException(new BusinessExceptionMessage("Debe especificar el árbol", "arbol", index));
+            appendException(new BusinessExceptionMessage("Debe especificar una troza", "troza", index));
             trozaValida = false;
         } else {
             if (linea.getTroza().getNumero() != null) {
                 if (!getDaoManager().getTrozaDAO().checkNumero(linea.getTroza().getNumero())) {
-                    if (linea.getTroza().getNumero() == 0) {
-                        appendException(new BusinessExceptionMessage("Debe especificar el árbol", "arbol", index));
-                    } else {
-                        appendException(new BusinessExceptionMessage("El árbol '" + linea.getTroza().getNumero() + "' no existe", "arbol", index));
-                    }
+                    appendException(new BusinessExceptionMessage("La troza '" + linea.getTroza().getNumero() + "' no existe", "troza", index));
                     trozaValida = false;
                 } else {
                     linea.setTroza(getDaoManager().getTrozaDAO().obtenerPorId(linea.getTroza().getNumero()));
                 }
             } else {
                 if (isNullOrEmpty(linea.getTroza().getCodigo())) {
-                    appendException(new BusinessExceptionMessage("Debe especificar el árbol", "troza", index));
+                    appendException(new BusinessExceptionMessage("Debe especificar una troza", "troza", index));
                     trozaValida = false;
                 } else if ((cabecera.getArea() != null) && (cabecera.getArea().getId() != null)) {
                     Integer numero = getDaoManager().getTrozaDAO().getIdPorCodigoArea(linea.getTroza().getCodigo(), cabecera.getArea().getId());
                     if (numero == null) {
-                        appendException(new BusinessExceptionMessage("El árbol '" + linea.getTroza().getCodigo() + "' no existe", "troza", index));
+                        appendException(new BusinessExceptionMessage("La troza '" + linea.getTroza().getCodigo() + "' no existe", "troza", index));
                         trozaValida = false;
                     } else {
                         linea.setTroza(getDaoManager().getTrozaDAO().obtenerPorId(numero));
                     }
                 } else {
-                    appendException(new BusinessExceptionMessage("No se puede encontrar el árbol, debe definir área y el código o número del árbol", "arbol", index));
+                    appendException(new BusinessExceptionMessage("No se puede encontrar la troza, debe definir área y el código o número de la troza", "troza", index));
                     trozaValida = false;
                 }
             }
@@ -155,17 +146,16 @@ public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U ex
         //Carga
         if (linea.getCarga() != null) {
             if (linea.getCarga().getId() != null) {
-                if (linea.getCarga().getId() == 0) {
-                    linea.setCarga(null);
+                if (!getDaoManager().getCargaDAO().checkId(linea.getCarga().getId())) {
+                    appendException(new BusinessExceptionMessage("La carga '" + linea.getCarga().getId() + "' no existe", "carga", index));
+                    cargaValida = false;
                 } else {
-                    if (!getDaoManager().getCargaDAO().checkId(linea.getCarga().getId())) {
-                        appendException(new BusinessExceptionMessage("La carga '" + linea.getCarga().getId() + "' no existe", "carga", index));
-                        cargaValida = false;
-                    } else {
-                        linea.setCarga(getDaoManager().getCargaDAO().obtenerPorId(linea.getCarga().getId()));
+                    linea.setCarga(getDaoManager().getCargaDAO().obtenerPorId(linea.getCarga().getId()));
+                    if (isNullOrEmpty(linea.getCodigoCarga()) && trozaValida) {
+                        //Defininimos el codigo
+                        linea.setCodigoCarga(linea.getTroza().getCodigo() + Troza.SEPARADOR_CODIGO + linea.getCarga().getCodigo());
                     }
                 }
-
             } else {
                 if (isNullOrEmpty(linea.getCarga().getCodigo())) {
                     linea.setCarga(null);
@@ -176,25 +166,26 @@ public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U ex
                         cargaValida = false;
                     } else {
                         linea.setCarga(getDaoManager().getCargaDAO().recuperarPorId(idCarga));
+                        if (isNullOrEmpty(linea.getCodigoCarga()) && trozaValida) {
+                            //Defininimos el codigo
+                            linea.setCodigoCarga(linea.getTroza().getCodigo() + Troza.SEPARADOR_CODIGO + linea.getCarga().getCodigo());
+                        }
                     }
                 }
             }
         }
 
-        //Validcaion de negorio
         if (trozaValida) {
             if (linea.getTroza().getExiste() != Troza.EXISTE_EXISTE) {
-                appendException(new BusinessExceptionMessage("El árbol '" + linea.getTroza().getCodigo() + "' se encuentra de baja", "troza", index));
-            } else {
-                if (linea.getTroza().getEstado() != Troza.ESTADO_CENSADA) {
-                    appendException(new BusinessExceptionMessage("El árbol '" + linea.getTroza().getCodigo() + "' se encuentra en un estado no válido", "troza", index));
-                }
+                appendException(new BusinessExceptionMessage("La troza '" + linea.getTroza().getCodigo() + "' se encuentra de baja", "troza", index));
+            } else if (linea.getTroza().getEstado() != estadoRequerido()) {
+                appendException(new BusinessExceptionMessage("La troza '" + linea.getTroza().getCodigo() + "' se encuentra en un estado inválido", "troza", index));
             }
             if ((cargaValida && linea.getCarga() != null) && (cabecera.getArea() != null) && (cabecera.getArea().getId() != null)) {
                 if (linea.getTroza().getExiste() == Troza.EXISTE_EXISTE) {
-                    String codigoSeccion = linea.getTroza().getCodigo() + Troza.SEPARADOR_CODIGO + linea.getCarga().getCodigo();
+                    String codigoSeccion = linea.getCodigoCarga();
                     if (getDaoManager().getTrozaDAO().getIdPorCodigoArea(codigoSeccion, cabecera.getArea().getId()) != null) {
-                        appendException(new BusinessExceptionMessage("El árbol '" + codigoSeccion + "' ya existe", "troza", index));
+                        appendException(new BusinessExceptionMessage("La troza '" + codigoSeccion + "' ya existe", "troza", index));
                     }
                 }
             }
@@ -203,17 +194,12 @@ public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U ex
         //Especie
         if (linea.getEspecie() != null) {
             if (linea.getEspecie().getId() != null) {
-                if (linea.getEspecie().getId() == 0) {
-                    linea.setEspecie(null);
-                } else {
-                    if (!getDaoManager().getEspecieDAO().checkId(linea.getEspecie().getId())) {
-                        appendException(new BusinessExceptionMessage("La especie '" + linea.getEspecie().getId() + "' no existe", "especie", index));
-                    }
+                if (!getDaoManager().getEspecieDAO().checkId(linea.getEspecie().getId())) {
+                    appendException(new BusinessExceptionMessage("La especie '" + linea.getEspecie().getId() + "' no existe", "especie", index));
                 }
-
             } else {
-                if (isNullOrEmpty(linea.getEspecie().getNombre())) {
-                    linea.setEspecie(null);
+                if (isNullOrEmpty(linea.getEspecie().getNombre()) && trozaValida) {
+                    linea.setEspecie(linea.getTroza().getEspecie());
                 } else {
                     linea.getEspecie().setId(getDaoManager().getEspecieDAO().getIdPorNombre(linea.getEspecie().getNombre()));
                     if (linea.getEspecie().getId() == null) {
@@ -221,43 +207,19 @@ public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U ex
                     }
                 }
             }
-        }
-
-        //Dmayor
-        if (linea.getDmayor() == null) {
-            appendException(new BusinessExceptionMessage("El campo DMayor es requerido", "dMayor", index));
-        } else if (linea.getDmayor() <= 0) {
-            appendException(new BusinessExceptionMessage("El campo DMayor debe ser mayor que cero", "dMayor", index));
-        }
-
-        //DMenor
-        if (linea.getDmenor() == null) {
-            appendException(new BusinessExceptionMessage("El campo DMenor es requerido", "dMenor", index));
-        } else if (linea.getDmenor() <= 0) {
-            appendException(new BusinessExceptionMessage("El campo DMenor debe ser mayor que cero", "dMenor", index));
-        }
-
-        //Largo
-        if (linea.getLargo() == null) {
-            appendException(new BusinessExceptionMessage("El campo Largo es requerido", "largo", index));
-        } else if (linea.getLargo() <= 0) {
-            appendException(new BusinessExceptionMessage("El campo Largo debe ser mayor que cero", "largo", index));
+        } else if (trozaValida) {
+            linea.setEspecie(linea.getTroza().getEspecie());
         }
 
         //Calidad
         if (linea.getCalidad() != null) {
             if (linea.getCalidad().getId() != null) {
-                if (linea.getCalidad().getId() == 0) {
-                    linea.setCalidad(null);
-                } else {
-                    if (!getDaoManager().getCalidadDAO().checkId(linea.getCalidad().getId())) {
-                        appendException(new BusinessExceptionMessage("La calidad '" + linea.getEspecie().getId() + "' no existe", "calidad", index));
-                    }
+                if (!getDaoManager().getCalidadDAO().checkId(linea.getCalidad().getId())) {
+                    appendException(new BusinessExceptionMessage("La calidad '" + linea.getEspecie().getId() + "' no existe", "calidad", index));
                 }
-
             } else {
-                if (isNullOrEmpty(linea.getCalidad().getCodigo())) {
-                    linea.setCalidad(null);
+                if (isNullOrEmpty(linea.getCalidad().getCodigo()) && trozaValida) {
+                    linea.setCalidad(linea.getTroza().getCalidad());
                 } else {
                     linea.getCalidad().setId(getDaoManager().getCalidadDAO().getIdPorCodigo(linea.getCalidad().getCodigo()));
                     if (linea.getCalidad().getId() == null) {
@@ -265,10 +227,87 @@ public abstract class FormularioPostCensoBO<T extends IFormularioPostCenso, U ex
                     }
                 }
             }
+        } else if (trozaValida) {
+            linea.setCalidad(linea.getTroza().getCalidad());
+        }
+
+        if (linea.getCarga() != null) {
+            //Dmayor
+            if (linea.getDmayor() == null) {
+                appendException(new BusinessExceptionMessage("El campo DMayor es requerido", "dMayor", index));
+            } else if (linea.getDmayor() <= 0) {
+                appendException(new BusinessExceptionMessage("El campo DMayor debe ser mayor que cero", "dMayor", index));
+            }
+
+            //DMenor
+            if (linea.getDmenor() == null) {
+                appendException(new BusinessExceptionMessage("El campo DMenor es requerido", "dMenor", index));
+            } else if (linea.getDmenor() <= 0) {
+                appendException(new BusinessExceptionMessage("El campo DMenor debe ser mayor que cero", "dMenor", index));
+            }
+
+            //Largo
+            if (linea.getLargo() == null) {
+                appendException(new BusinessExceptionMessage("El campo Largo es requerido", "largo", index));
+            } else if (linea.getLargo() <= 0) {
+                appendException(new BusinessExceptionMessage("El campo Largo debe ser mayor que cero", "largo", index));
+            }
+        } else {
+            //Sin carga
+            //Dmayor
+            if (linea.getDmayor() == null) {
+                if (trozaValida) {
+                    linea.setDmayor(linea.getTroza().getdMayor());
+                }
+            } else if (linea.getDmayor() <= 0) {
+                appendException(new BusinessExceptionMessage("El campo DMayor debe ser mayor que cero", "dMayor", index));
+            }
+            //DMenor
+            if (linea.getDmenor() == null) {
+                if (trozaValida) {
+                    linea.setDmenor(linea.getTroza().getdMenor());
+                }
+            } else if (linea.getDmenor() <= 0) {
+                appendException(new BusinessExceptionMessage("El campo DMenor debe ser mayor que cero", "dMenor", index));
+            }
+
+            //Largo
+            if (linea.getLargo() == null) {
+                if (trozaValida) {
+                    linea.setLargo(linea.getTroza().getLargo());
+                }
+            } else if (linea.getLargo() <= 0) {
+                appendException(new BusinessExceptionMessage("El campo Largo debe ser mayor que cero", "largo", index));
+            }
+        }
+        validarDetalle(linea, index, cabecera);
+    }
+
+    @Override
+    protected void despuesDeRecuperar(T entidad) {
+        entidad.getDetalle().size();
+    }
+
+    @Override
+    protected final void postInsertar(T entidad) {
+        for (int i = 0; i < entidad.getDetalle().size(); i++) {
+            IDetallePostCenso linea = (IDetallePostCenso) entidad.getDetalle().get(i);
+            TrozaBO trozaBO = new TrozaBO();
+            if (linea.getCarga() == null) {
+                procesarLineaDetalle(linea, i, entidad);
+                trozaBO.corregirMedidas(linea, entidad);
+            } else {
+                trozaBO.crearSeccion(linea, entidad);
+            }
         }
     }
-    
+
     protected abstract void validarEncabezado(T entity);
-    
-    
+
+    protected abstract byte estadoRequerido();
+
+    protected abstract void validarDetalle(IDetallePostCenso linea, int index, T cabecera);
+
+    protected abstract void procesarLineaDetalle(IDetallePostCenso linea, int index, T cabecera);
+
 }

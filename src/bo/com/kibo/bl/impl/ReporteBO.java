@@ -81,4 +81,34 @@ public class ReporteBO
         });
     }
 
+    @Override
+    public List<TrozaGeneral> obtenerExtraccionGeneral() {
+        return ejecutarEnTransaccion(new Callable<List<TrozaGeneral>>() {
+            @Override
+            public List<TrozaGeneral> call() throws Exception {
+                return getObjetoDAO().obtenerExtraccionGeneral();
+            }
+        });
+    }
+
+    @Override
+    public List<TrozaGeneral> obtenerExtraccionSaldo() {
+        return ejecutarEnTransaccion(new Callable<List<TrozaGeneral>>() {
+            @Override
+            public List<TrozaGeneral> call() throws Exception {
+                return getObjetoDAO().obtenerExtraccionSaldo();
+            }
+        });
+    }
+
+    @Override
+    public List<TrozaGeneral> obtenerDespachoGeneral() {
+        return ejecutarEnTransaccion(new Callable<List<TrozaGeneral>>() {
+            @Override
+            public List<TrozaGeneral> call() throws Exception {
+                return getObjetoDAO().obtenerDespachoGeneral();
+            }
+        });
+    }
+
 }

@@ -16,10 +16,14 @@ public interface ITrozaBO extends IGenericoBO<Troza, Integer> {
 
     List<Troza> getTrozasParaTala(Integer idArea);
 
+    List<Troza> getTrozasParaExtraccion(Integer idArea);
+
+    List<Troza> getTrozasParaMovimiento(Integer idArea);
+
     List<String> getCodigosTrozaParaTala(Integer idArea, String codigoParcial);
 
     String getCodigo(Integer numero);
-    
+
     Troza obtenerPorCodigo(String codigo, Integer idArea);
 
 }

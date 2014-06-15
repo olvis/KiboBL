@@ -59,11 +59,7 @@ public class FajaBO extends GeoLugarBO<Faja, IFajaDAO> implements IFajaBO {
         } else {
             if (entity.getArea().getId() != null) {
                 if (!(getDaoManager().getAreaDAO().checkId(entity.getArea().getId()))) {
-                    if (entity.getArea().getId() == 0){
-                        appendException(new BusinessExceptionMessage("El área es un campo requerido", "area"));
-                    }else{
-                        appendException(new BusinessExceptionMessage("El área '" + entity.getArea().getId() + "' no existe", "area"));
-                    }
+                    appendException(new BusinessExceptionMessage("El área '" + entity.getArea().getId() + "' no existe", "area"));
                     codigoValido = false;
                 }
             } else {
@@ -117,7 +113,7 @@ public class FajaBO extends GeoLugarBO<Faja, IFajaDAO> implements IFajaBO {
     protected void despuesDeRecuperar(Faja entidad) {
         super.despuesDeRecuperar(entidad); //To change body of generated methods, choose Tools | Templates.
         //Obligamos a cargar el area
-        if (entidad.getArea() != null){
+        if (entidad.getArea() != null) {
             entidad.getArea().getCodigo();
         }
     }
@@ -131,5 +127,5 @@ public class FajaBO extends GeoLugarBO<Faja, IFajaDAO> implements IFajaBO {
             }
         });
     }
-    
+
 }

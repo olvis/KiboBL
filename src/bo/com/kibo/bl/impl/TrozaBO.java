@@ -9,11 +9,14 @@ import bo.com.kibo.bl.exceptions.BusinessExceptionMessage;
 import bo.com.kibo.bl.intf.ITrozaBO;
 import bo.com.kibo.dal.intf.ITrozaDAO;
 import bo.com.kibo.entidades.DetalleCenso;
-import bo.com.kibo.entidades.DetalleCorta;
 import bo.com.kibo.entidades.EncabezadoFormulario;
 import bo.com.kibo.entidades.FormularioCenso;
 import bo.com.kibo.entidades.FormularioCorta;
+import bo.com.kibo.entidades.FormularioExtraccion;
+import bo.com.kibo.entidades.FormularioMovimiento;
 import bo.com.kibo.entidades.Troza;
+import bo.com.kibo.entidades.intf.IDetallePostCenso;
+import bo.com.kibo.entidades.intf.IFormularioPostCenso;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -62,6 +65,26 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
     }
 
     @Override
+    public List<Troza> getTrozasParaExtraccion(final Integer idArea) {
+        return ejecutarEnTransaccion(new Callable<List<Troza>>() {
+            @Override
+            public List<Troza> call() throws Exception {
+                return getDaoManager().getTrozaDAO().getTrozasParaExtraccion(idArea);
+            }
+        });
+    }
+
+    @Override
+    public List<Troza> getTrozasParaMovimiento(final Integer idArea) {
+        return ejecutarEnTransaccion(new Callable<List<Troza>>() {
+            @Override
+            public List<Troza> call() throws Exception {
+                return getDaoManager().getTrozaDAO().getTrozasParaMovimiento(idArea);
+            }
+        });
+    }
+
+    @Override
     public String getCodigo(final Integer numero) {
         return ejecutarEnTransaccion(new Callable<String>() {
             @Override
@@ -71,11 +94,10 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
         });
     }
 
-    public Troza crearSeccion(DetalleCorta linea, FormularioCorta formulario) {
+    public Troza crearSeccion(IDetallePostCenso linea, IFormularioPostCenso formulario) {
         Troza seccion = new Troza();
-        seccion.setCodigo(linea.getTroza().getCodigo() + Troza.SEPARADOR_CODIGO + linea.getCarga().getCodigo());
+        seccion.setCodigo(linea.getCodigoCarga());
         seccion.setArea(formulario.getArea());
-
         if (linea.getEspecie() != null) {
             seccion.setEspecie(linea.getEspecie());
         } else {
@@ -88,18 +110,34 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
             seccion.setCalidad(linea.getTroza().getCalidad());
         }
 
+        if (linea.getPatio() == null) {
+            seccion.setPatio(linea.getTroza().getPatio());
+        } else {
+            seccion.setPatio(linea.getPatio());
+        }
+
         //seccion.setCalidad(linea.getCalidad());
-        seccion.setExiste(Troza.EXISTE_EXISTE);
         seccion.setFaja(linea.getTroza().getFaja());
         seccion.setPadre(linea.getTroza());
 
         byte estadoSeccion = Troza.ESTADO_CENSADA;
+        byte existeSeccion = Troza.EXISTE_EXISTE;
         switch (formulario.getTipo()) {
             case EncabezadoFormulario.TIPO_FORMULARIO_CORTA:
                 estadoSeccion = Troza.ESTADO_TALADA;
-                seccion.setFormularioCorta(formulario);
+                seccion.setFormularioCorta((FormularioCorta) formulario);
+                break;
+            case EncabezadoFormulario.TIPO_FORMULARIO_EXTRACCION:
+                estadoSeccion = Troza.ESTADO_ENPATIO;
+                seccion.setFormularioExtraccion((FormularioExtraccion) formulario);
+                break;
+            case EncabezadoFormulario.TIPO_FORMULARIO_MOVIMIENTO:
+                estadoSeccion = Troza.ESTADO_ENPATIO;
+                existeSeccion = Troza.EXISTE_DESPACHADA;
+                seccion.setFormularioDespacho((FormularioMovimiento) formulario);
                 break;
         }
+        seccion.setExiste(existeSeccion);
         seccion.setEstado(estadoSeccion);
         seccion.setdMayor(linea.getDmayor());
         seccion.setdMenor(linea.getDmenor());
@@ -109,27 +147,42 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
         return seccion;
     }
 
-    public void corregirMedidas(DetalleCorta linea) {
+    public void corregirMedidas(IDetallePostCenso linea, IFormularioPostCenso cabecera) {
         if (linea.getEspecie() != null) {
-            linea.getTroza().setEspecie(linea.getEspecie());
+            if (!linea.getEspecie().getId().equals(linea.getTroza().getEspecie().getId())) {
+                linea.getTroza().setEspecie(linea.getEspecie());
+            }
+
         }
 
         if (linea.getCalidad() != null) {
-            linea.getTroza().setCalidad(linea.getCalidad());
-
+            if (!linea.getCalidad().getId().equals(linea.getTroza().getCalidad().getId())) {
+                linea.getTroza().setCalidad(linea.getCalidad());
+            }
         }
 
         if (linea.getDmayor() != null) {
-            linea.getTroza().setdMayor(linea.getDmayor());
+            if (linea.getTroza().getdMayor() == null) {
+                linea.getTroza().setdMayor(linea.getDmayor());
+            } else if (!linea.getDmayor().equals(linea.getTroza().getdMayor())) {
+                linea.getTroza().setdMayor(linea.getDmayor());
+            }
         }
 
         if (linea.getDmenor() != null) {
-            linea.getTroza().setdMenor(linea.getDmenor());
-
+            if (linea.getTroza().getdMenor() == null) {
+                linea.getTroza().setdMenor(linea.getDmenor());
+            } else if (!linea.getDmenor().equals(linea.getTroza().getdMenor())) {
+                linea.getTroza().setdMenor(linea.getDmenor());
+            }
         }
 
         if (linea.getLargo() != null) {
-            linea.getTroza().setLargo(linea.getLargo());
+            if (linea.getTroza().getLargo() == null) {
+                linea.getTroza().setLargo(linea.getLargo());
+            } else if (!linea.getLargo().equals(linea.getTroza().getLargo())) {
+                linea.getTroza().setLargo(linea.getLargo());
+            }
         }
     }
 

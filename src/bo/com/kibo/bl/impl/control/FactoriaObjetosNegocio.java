@@ -12,6 +12,9 @@ import bo.com.kibo.bl.impl.EspecieBO;
 import bo.com.kibo.bl.impl.FajaBO;
 import bo.com.kibo.bl.impl.FormularioCensoBO;
 import bo.com.kibo.bl.impl.FormularioCortaBO;
+import bo.com.kibo.bl.impl.FormularioExtraccionBO;
+import bo.com.kibo.bl.impl.FormularioMovimientoBO;
+import bo.com.kibo.bl.impl.PatioBO;
 import bo.com.kibo.bl.impl.ReporteBO;
 import bo.com.kibo.bl.impl.RolBO;
 import bo.com.kibo.bl.impl.TrozaBO;
@@ -23,6 +26,9 @@ import bo.com.kibo.bl.intf.IEspecieBO;
 import bo.com.kibo.bl.intf.IFajaBO;
 import bo.com.kibo.bl.intf.IFormularioCensoBO;
 import bo.com.kibo.bl.intf.IFormularioCortaBO;
+import bo.com.kibo.bl.intf.IFormularioExtraccionBO;
+import bo.com.kibo.bl.intf.IFormularioMovimientoBO;
+import bo.com.kibo.bl.intf.IPatioBO;
 import bo.com.kibo.bl.intf.IReporteBO;
 import bo.com.kibo.bl.intf.IRolBO;
 import bo.com.kibo.bl.intf.ITrozaBO;
@@ -112,6 +118,15 @@ public class FactoriaObjetosNegocio {
         return trozaBO;
     }
 
+    private IPatioBO patioBO;
+
+    public IPatioBO getPatioBO() {
+        if (patioBO == null) {
+            patioBO = new PatioBO();
+        }
+        return patioBO;
+    }
+
     private IFormularioCensoBO formularioCensoBO;
 
     public IFormularioCensoBO getFormularioCensoBO() {
@@ -130,6 +145,24 @@ public class FactoriaObjetosNegocio {
         return formularioCortaBO;
     }
 
+    private IFormularioExtraccionBO formularioExtraccionBO;
+
+    public IFormularioExtraccionBO getFormularioExtraccionBO() {
+        if (formularioExtraccionBO == null) {
+            formularioExtraccionBO = new FormularioExtraccionBO();
+        }
+        return formularioExtraccionBO;
+    }
+
+    private IFormularioMovimientoBO formularioMovimientoBO;
+
+    public IFormularioMovimientoBO getFormularioMovimientoBO() {
+        if (formularioMovimientoBO == null) {
+            formularioMovimientoBO = new FormularioMovimientoBO();
+        }
+        return formularioMovimientoBO;
+    }
+
     private IRolBO rolBO;
 
     public IRolBO getRolBO() {
@@ -138,11 +171,11 @@ public class FactoriaObjetosNegocio {
         }
         return rolBO;
     }
-    
+
     private IReporteBO reporteBO;
-    
-    public IReporteBO getReporteBO(){
-        if (reporteBO == null){
+
+    public IReporteBO getReporteBO() {
+        if (reporteBO == null) {
             reporteBO = new ReporteBO();
         }
         return reporteBO;

@@ -35,8 +35,8 @@ public class RolBO
         if (usuario.getRol() == null) {
             return false;
         }
-        
-        if (usuario.getRol().getId() == null){
+
+        if (usuario.getRol().getId() == null) {
             return false;
         }
 
@@ -44,7 +44,7 @@ public class RolBO
             @Override
             public Boolean call() throws Exception {
                 RolPermiso rp = getDaoManager().getRolPermisoDAO().recuperarPorId(new RolPermisoId(idPermiso, usuario.getRol().getId()));
-                if (rp == null){
+                if (rp == null) {
                     return false;
                 }
                 return rp.isValor();

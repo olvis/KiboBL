@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
  * @author Olvinho
  */
 public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioDAO> implements IUsuarioBO {
+
     //algoritmos
     public static final String MD2 = "MD2";
     public static final String MD5 = "MD5";
@@ -28,11 +29,11 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
     public static final String SHA256 = "SHA-256";
     public static final String SHA384 = "SHA-384";
     public static final String SHA512 = "SHA-512";
-    
+
     //Validar Email
-    private final Pattern pattern = Pattern.compile(EMAIL_PATTERN); 
+    private final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    
+
     @Override
     protected int IdPermisoInsertar() {
         return 20001;
@@ -75,7 +76,7 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
 
     @Override
     protected void validar(Usuario entity) {
-        
+
         //Nombre
         boolean nombreValido = true;
         if (isNullOrEmpty(entity.getNombre())) {
@@ -90,7 +91,7 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
             if (entity.getId() == null) {
                 //Inserccion
                 Integer id = getObjetoDAO().getIdPorNombre(entity.getNombre());
-                if ( id != null) {
+                if (id != null) {
                     appendException(new BusinessExceptionMessage("El nombre '" + entity.getNombre() + "' ya existe", "nombre"));
                 }
             } else {
@@ -118,7 +119,7 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
         } else if (entity.getEmail().length() > 50) {
             appendException(new BusinessExceptionMessage("El email no puede tener más de 50 carácteres", "email"));
             emailValido = false;
-        } else if (!validarEmail(entity.getEmail())){
+        } else if (!validarEmail(entity.getEmail())) {
             appendException(new BusinessExceptionMessage("El email no es válido", "email"));
             emailValido = false;
         }
@@ -137,7 +138,7 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
                 }
             }
         }
-        
+
         //Rol
         if (entity.getRol() == null) {
             appendException(new BusinessExceptionMessage("El rol es un campo requerido", "rol"));
@@ -158,31 +159,29 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
                 }
             }
         }
-        
+
     }
 
     private String contrasena;
+
     @Override
     protected void preInsertar(Usuario entidad) {
         //Generamos la conseña
         entidad.setContrasenaDesencriptada(cadenaAleatoria(15));
         entidad.setContrasena(encriptar(entidad.getContrasenaDesencriptada()));
-        contrasena =  entidad.getContrasenaDesencriptada();
+        contrasena = entidad.getContrasenaDesencriptada();
     }
 
     @Override
     protected void postInsertar(Usuario entidad) {
         entidad.setContrasenaDesencriptada(contrasena);
     }
-    
-    
-    
-    
-    public boolean validarEmail(String email){
+
+    public boolean validarEmail(String email) {
         Matcher matcher = pattern.matcher(email);
-	return matcher.matches();
+        return matcher.matches();
     }
-    
+
     private String cadenaAleatoria(int longitud) {
         String cadenaAleatoria = "";
         long milis = new java.util.GregorianCalendar().getTimeInMillis();
@@ -197,34 +196,41 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
         }
         return cadenaAleatoria;
     }
-    
+
     @Override
-    public String encriptar(String texto){
+    public String encriptar(String texto) {
         return getStringMessageDigest(texto, SHA256);
     }
-    
-    /***
+
+    /**
+     * *
      * Convierte un arreglo de bytes a String usando valores hexadecimales
+     *
      * @param digest arreglo de bytes a convertir
      * @return String creado a partir de <code>digest</code>
      */
-    private static String toHexadecimal(byte[] digest){
+    private static String toHexadecimal(byte[] digest) {
         String hash = "";
-        for(byte aux : digest) {
+        for (byte aux : digest) {
             int b = aux & 0xff;
-            if (Integer.toHexString(b).length() == 1) hash += "0";
+            if (Integer.toHexString(b).length() == 1) {
+                hash += "0";
+            }
             hash += Integer.toHexString(b);
         }
         return hash;
     }
 
-    /***
+    /**
+     * *
      * Encripta un mensaje de texto mediante algoritmo de resumen de mensaje.
+     *
      * @param message texto a encriptar
-     * @param algorithm algoritmo de encriptacion, puede ser: MD2, MD5, SHA-1, SHA-256, SHA-384, SHA-512
+     * @param algorithm algoritmo de encriptacion, puede ser: MD2, MD5, SHA-1,
+     * SHA-256, SHA-384, SHA-512
      * @return mensaje encriptado
      */
-    public static String getStringMessageDigest(String message, String algorithm){
+    public static String getStringMessageDigest(String message, String algorithm) {
         byte[] digest = null;
         byte[] buffer = message.getBytes();
         try {
@@ -236,6 +242,6 @@ public class UsuarioBO extends ObjetoNegocioGenerico<Usuario, Integer, IUsuarioD
             System.out.println("Error creando Digest");
         }
         return toHexadecimal(digest);
-    } 
+    }
 
 }

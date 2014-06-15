@@ -65,8 +65,8 @@ public class CalidadBO extends ObjetoNegocioGenerico<Calidad, Integer, ICalidadD
                 }
             }
         }
-        
-        if (!isNullOrEmpty(entity.getDescripcion()) && (entity.getDescripcion().length() > 50)){
+
+        if (!isNullOrEmpty(entity.getDescripcion()) && (entity.getDescripcion().length() > 50)) {
             appendException(new BusinessExceptionMessage("La descripción no puede tener más de 50 carácteres", "descripcion"));
         }
 
@@ -81,5 +81,5 @@ public class CalidadBO extends ObjetoNegocioGenerico<Calidad, Integer, ICalidadD
             }
         });
     }
-    
+
 }
