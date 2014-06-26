@@ -186,15 +186,7 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
         }
     }
 
-    @Override
-    public List<String> getCodigosTrozaParaTala(final Integer idArea, final String codigoParcial) {
-        return ejecutarEnTransaccion(new Callable<List<String>>() {
-            @Override
-            public List<String> call() throws Exception {
-                return getObjetoDAO().getCodigosTrozaParaTala(idArea, codigoParcial);
-            }
-        });
-    }
+    
 
     @Override
     public Troza obtenerPorCodigo(final String codigo, final Integer idArea) {
@@ -206,6 +198,36 @@ public class TrozaBO extends ObjetoNegocioGenerico<Troza, Integer, ITrozaDAO> im
                     return null;
                 }
                 return getObjetoDAO().recuperarPorId(id);
+            }
+        });
+    }
+
+    @Override
+    public List<String> getCodigosTrozaParaTala(final Integer idArea, final String codigoParcial) {
+        return ejecutarEnTransaccion(new Callable<List<String>>() {
+            @Override
+            public List<String> call() throws Exception {
+                return getObjetoDAO().getCodigosTrozaParaTala(idArea, codigoParcial);
+            }
+        });
+    }
+    
+    @Override
+    public List<String> getCodigosTrozaParaExtraccion(final Integer idArea,final  String codigoParcial) {
+        return ejecutarEnTransaccion(new Callable<List<String>>() {
+            @Override
+            public List<String> call() throws Exception {
+                return getObjetoDAO().getCodigosTrozaParaExtraccion(idArea, codigoParcial);
+            }
+        });
+    }
+
+    @Override
+    public List<String> getCodigosTrozaParaMovimiento(final Integer idArea,final String codigoParcial) {
+        return ejecutarEnTransaccion(new Callable<List<String>>() {
+            @Override
+            public List<String> call() throws Exception {
+                return getObjetoDAO().getCodigosTrozaParaMovimiento(idArea, codigoParcial);
             }
         });
     }
