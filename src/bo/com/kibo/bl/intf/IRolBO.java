@@ -6,7 +6,9 @@
 package bo.com.kibo.bl.intf;
 
 import bo.com.kibo.entidades.Rol;
+import bo.com.kibo.entidades.RolPermiso;
 import bo.com.kibo.entidades.Usuario;
+import java.util.List;
 
 /**
  *
@@ -15,4 +17,11 @@ import bo.com.kibo.entidades.Usuario;
 public interface IRolBO extends IGenericoBO<Rol, Integer> {
 
     boolean verificarPermiso(Integer idPermiso, Usuario usuario);
+    
+    List<RolPermiso> getPermisos(int idRol, Integer idPadre);
+    
+    void guardarPermisos(List<RolPermiso> permisos);
+
+    String getDescripcion(Integer id);
+    
 }
